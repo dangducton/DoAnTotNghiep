@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title th:text="${title}"></title>
+<head th:replace="frontend/layout :: head">
+</head>
+<body>
+	<header th:replace="frontend/layout :: header"> </header>
+	<nav id="navigation">
+		<div class="container">
+			<div id="responsive-nav">
+				<ul class="main-nav nav navbar-nav">
+					<li><a th:href="@{/}">Trang chủ</a></li>
+					<li><a th:href="@{/danhsachsanpham}">Danh sách sản phẩm</a></li>
+					<li><a href="/danhsachtintucfrontend">Tin tức</a></li>
+					<li><a href="/theodoicorona">Theo dõi Corona</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+		<div id="breadcrumb" class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-12">
+						<h3 class="breadcrumb-header">Thanh toán</h3>
+						<ul class="breadcrumb-tree">
+							<li><a href="#">Trang chủ</a></li>
+							<li class="active">Thanh toán</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="container">
+				<div class="row">
+				<p class="text-danger" th:if="${status != null}"
+						th:text="${status}"></p>
+				<form id="second" method="post" th:action="@{/banhang/checkout}">
+					<div class="col-md-7">
+						<!-- Billing Details -->
+						<div class="billing-details">
+							<div class="section-title">
+								<h3 class="title">Thông tin người nhận đơn hàng</h3>
+							</div>
+							<div class="form-group">
+								<input class="input" type="text" id="hoten" name="hoten" placeholder="Họ tên" th:value="${nguoiDung.hoten}"/>
+							</div>
+							<div class="form-group">
+								<input class="input" type="email" id="email" name="email" placeholder="Email" th:value="${nguoiDung.email}"/>
+							</div>
+							<div class="form-group">
+								<input class="input" type="text" id="diachi" name="diachi" placeholder="Địa chỉ" th:value="${nguoiDung.diachi}"/>
+							</div>
+							<div class="form-group">
+								<input class="input" type="text" id="dienthoai" name="dienthoai" placeholder="Điện thoại" th:value="${nguoiDung.dienthoai}"/>
+							</div>
+						</div>
+						<div class="shiping-details">
+							<div class="section-title">
+								<h3 class="title">Gửi cho người khác</h3>
+							</div>
+							<div class="input-checkbox">
+								<input type="checkbox" name="diachikhacid" id="shiping-address">
+								<label for="shiping-address">
+									<span></span>
+									Gửi đến địa chỉ khác
+								</label>
+								<div class="caption">
+									<div class="form-group">
+									<input class="input" type="text" name="hotenkhac" placeholder="Tên">
+									</div>
+									<div class="form-group">
+										<input class="input" type="text" name="diachikhac" placeholder="Địa chỉ">
+									</div>
+									<div class="form-group">
+										<input class="input" type="text" name="dienthoaikhac" placeholder="Điện thoại">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="order-notes">
+							<textarea class="input" placeholder="Ghi chú" name="ghichu"></textarea>
+						</div>
+					</div>
+					<div class="col-md-5 order-details">
+						<div class="section-title text-center">
+							<h3 class="title">Thông tin đơn hàng</h3>
+						</div>
+						<div class="order-summary">
+							<div class="order-col">
+								<div><strong>Sản phẩm</strong></div>
+								<div><strong>Tổng cộng</strong></div>
+							</div>
+							<div class="order-products">
+								<div class="order-col" th:each="listGioHang : ${listGioHang}">
+									<div th:text="${listGioHang.soluong +' X ' + listGioHang.ten}"></div>
+									<div th:text="${#numbers.formatDecimal(listGioHang.giasanpham * listGioHang.soluong,3,'POINT',0,'COMMA')+' đ'}"></div>
+								</div>
+							</div>
+							<div class="order-col">
+								<div><strong>Tổng giá trị đơn hàng</strong></div>
+								<div><strong class="order-total" th:text="${#numbers.formatDecimal(tongSoTien,3,'POINT',0,'COMMA') +' đ'}">VNĐ></strong></div>
+							</div>
+						</div>
+						<div class="payment-method">
+						<div><strong>Hình thức vận chuyển</strong></div>
+							<div class="radio" th:each="vanChuyen : ${vanChuyen}">
+								<input type="radio" name="vanchuyen" th:value="${vanChuyen.id}" th:id="${'ship-'+vanChuyen.id}">
+								<label th:for="${'ship-'+vanChuyen.id}">
+									<span></span>
+									<p th:text="${vanChuyen.ten}"></p>
+								</label>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-success">Thanh toán trực tiếp</button>
+						<button type="submit" class="btn btn-info" th:formaction="@{/banhang/thanhtoanonline}">Thanh toán online</button>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	<div id="newsletter" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="newsletter">
+						<p>
+						<strong>LIÊN HỆ VỚI CHÚNG TÔI NHÉ</strong>
+						</p>
+						<form action="#" th:action="@{/guilienhe}" method="get">
+							<input class="input" type="email" name="email" placeholder="Email"/>
+							<input class="input" type="text" name="hoten" placeholder="Họ tên"/>
+							<input class="input" type="text" name="noidung" placeholder="Nội dung"/>
+							<br>
+							<button class="newsletter-btn" type="submit">
+								<i class="fa fa-envelope"></i> LIÊN HỆ
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="frontend/layout :: footer"> </footer>
+</body>
+</html>

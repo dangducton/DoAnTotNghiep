@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${danhMuc}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<div class="card">
+				<div class="card-block">
+					<button class="btn btn-info float-left nBtn">Thêm mới</button>
+					<p class="text-success" th:if="${status != null}"
+						th:text="${status}"></p>
+					<form class="form-inline ml-3 float-right">
+						<input class="form-control form-control-navbar" type="search"
+							placeholder="Tìm kiếm" aria-label="Tìm kiếm">
+						<div class="input-group-append">
+							<button class="btn btn-info float-right nBtn" type="submit">
+								<i class="fas fa-search"></i>
+							</button>
+						</div>
+					</form>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>STT</th>
+								<th>Tên nhà cung cấp</th>
+								<th>Ngày tạo</th>
+								<th>Trạng thái</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="listDanhMuc,iterStat : ${listDanhMuc}">
+								<td th:text="${iterStat.index + 1 + items}"></td>
+								<td th:text="${listDanhMuc.ten}"></td>
+								<td th:text="${listDanhMuc.ngaytao}"></td>
+								<td th:if="${listDanhMuc.status} == 1"><small
+									class="badge badge-primary"><i class="far fa-clock"></i>Hiển
+										thị</small></td>
+								<td th:if="${listDanhMuc.status} == 0"><small
+									class="badge badge-danger"><i class="far fa-clock"></i>Không
+										hiển thị</small></td>
+								<td><a class="btn btn-primary eBtn"
+									th:href="@{/admin/findonedanhmuc/(id=${listDanhMuc.id})}"><span
+										class="glyphicon glyphicon-pencil"></span>Sửa</a></td>
+								<td><a th:if="${listDanhMuc.status} == 1"
+									class="btn btn-info activateBtn"
+									th:href="@{/admin/updateNotActivateNhaCungCap/{id}(id = ${listDanhMuc.id})}">Không
+										hiển thị</a> <a th:if="${listDanhMuc.status} == 0"
+									class="btn btn-primary activateBtn"
+									th:href="@{/admin/updateActivateNhaCungCap/{id}(id = ${listDanhMuc.id})}">Hiển
+										thị</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:fragment='paginationbar'>
+						<div>
+							<ul class="pagination">
+								<li class="page-item" th:class="${page.firstPage}?'disabled':''"><span
+									class="page-link" th:if='${page.firstPage}'>← First</span> <a
+									class="page-link" th:if='${not page.firstPage}'
+									th:href='@{${page.url}(page=0,size=${page.size})}'>← First</a></li>
+								<li class="page-item"
+									th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasPreviousPage}'>«</span>
+									<a class="page-link" th:if='${page.hasPreviousPage}'
+									th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
+									title='Go to previous page'>«</a></li>
+								<li class="page-item" th:each='item : ${page.items}'
+									th:class="${item.current}? 'active' : ''"><span
+									class="page-link" th:if='${item.current}'
+									th:text='${item.number}'>1</span> <a class="page-link"
+									th:if='${not item.current}'
+									th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
+										th:text='${item.number}'>1</span></a></li>
+								<li class="page-item"
+									th:class="${page.hasNextPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasNextPage}'>»</span> <a
+									class="page-link" th:if='${page.hasNextPage}'
+									th:href='@{${page.url}(page=${page.number},size=${page.size})}'
+									title='Go to next page'>»</a></li>
+								<li class="page-item"
+									th:class="${page.lastPage}? 'disabled' : ''"><span
+									class="page-link" th:if='${page.lastPage}'>Last →</span> <a
+									class="page-link" th:if='${not page.lastPage}'
+									th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Last
+										→</a></li>
+							</ul>
+						</div>
+					</div>
+					<hr />
+				</div>
+			</div>
+
+			<div class="myForm">
+				<form action="#" id="second_form2" method="post"
+					th:action="@{/admin/updateNhaCungCap}">
+					<div aria-hidden="true" aria-labelledby="exampleModalLabel"
+						class="modal fade" id="exampleModal" role="dialog" tabindex="-1">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Cập nhật</h5>
+									<button aria-label="Close" class="close" data-dismiss="modal"
+										type="button">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<div class="form-group">
+										<input class="form-control" id="id" name="id" type="hidden"
+											value="" /> <input class="form-control" id="status"
+											name="status" type="hidden" value="" /> <input
+											class="form-control" id="ngaytao" name="ngaytao"
+											type="hidden" value="" /> <label class="col-form-label"
+											for="tendanhmuc">Tên nhà cung cấp:</label> <input
+											class="form-control" id="tennhacungcap" name="tennhacungcap"
+											type="text" value="" />
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-secondary" data-dismiss="modal"
+										type="button">Close</button>
+									<input class="btn btn-primary" type="submit" value="Cập nhật" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="myForm1">
+				<form action="#" id="second_form" method="post"
+					th:action="@{/admin/addNhaCungCap}">
+					<div aria-hidden="true" aria-labelledby="exampleModalLabel"
+						class="modal fade" id="exampleModal1" role="dialog" tabindex="-1">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Tạo mới</h5>
+									<button aria-label="Close" class="close" data-dismiss="modal"
+										type="button">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<div class="form-group">
+										<label class="col-form-label" for="tennhacungcap">Tên nhà cung cấp:</label> <input class="form-control" id="tendanhmuc"
+											name="tennhacungcap" type="text" value="" />
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-secondary" data-dismiss="modal"
+										type="button">Close</button>
+									<input class="btn btn-primary" type="submit" value="Lưu" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div aria-hidden="true" aria-labelledby="myModalLabel"
+				class="modal fade" id="myModal" role="dialog" tabindex="-1">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="myModalLabel">Update Record</h5>
+							<button aria-label="Close" class="close" data-dismiss="modal"
+								type="button">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p class="alert alert-danger">Bạn có muốn update record này
+								không?</p>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-secondary" data-dismiss="modal"
+								type="button">Close</button>
+							<a class="btn btn-danger" href="" id="updateRef">Sửa</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+
+	<script src="../static/quantri/js/nhacungcap.js"
+		th:src="@{/quantri/js/nhacungcap.js}" type="text/javascript"></script>
+</body>
+</html>

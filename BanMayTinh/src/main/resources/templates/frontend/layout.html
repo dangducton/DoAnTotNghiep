@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+<meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+<link
+	th:href="@{https://fonts.googleapis.com/css?family=Montserrat:400,500,700}"
+	rel="stylesheet">
+	  <link rel="stylesheet" type="text/css" th:href="@{/quantri/css/validation.css}"/>
+<link type="text/css" rel="stylesheet"
+	th:href="@{/khachhang/css/bootstrap.min.css}" />
+<link type="text/css" rel="stylesheet"
+	th:href="@{/khachhang/css/slick.css}" />
+<link type="text/css" rel="stylesheet"
+	th:href="@{/khachhang/css/slick-theme.css}" />
+<link type="text/css" rel="stylesheet"
+	th:href="@{/khachhang/css/nouislider.min.css}" />
+<link rel="stylesheet" th:href="@{/khachhang/css/font-awesome.min.css}">
+<link type="text/css" rel="stylesheet"
+	th:href="@{/khachhang/css/style.css}" />
+	
+</head>
+<body>
+	<!-- HEADER -->
+	<header th:fragment="header">
+		<!-- TOP HEADER -->
+		<div id="top-header">
+			<div class="container">
+				<ul class="header-links pull-left">
+					<li><a href="#"><i class="fa fa-phone"></i> 024.3537.1526</a></li>
+					<li><a href="#"><i class="fa fa-envelope-o"></i>
+							info@thuylinh.vn</a></li>
+					<li><a href="#"><i class="fa fa-map-marker"></i> Tòa nhà
+							Thủy Linh , Số 33 Thái Hà, Trung Liệt, Đống Đa, Hà Nội</a></li>
+				</ul>
+				<ul class="header-links pull-right">
+					<li th:if="${tenNguoiDung} == null"><a
+						th:href="@{/trangdangnhap}"><i class="fa fa-user-o"></i> Đăng
+							nhập</a></li>
+					<li th:if="${tenNguoiDung} != null"><a
+						th:href="@{/banhang/thongtincanhan/}" th:if="${tenNguoiDung} != null"
+						th:text="'Xin chào' + ${tenNguoiDung.hoten}"><i
+							class="fa fa-user-o"></i></a></li>
+					<li th:if="${tenNguoiDung} != null"><form th:action="@{'/logout'}" method="post">
+							<i class="fa fa-sign-out"></i>
+							<button>Đăng xuất</button>
+						</form></li>
+				</ul>
+			</div>
+		</div>
+		<div id="header">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3">
+						<div class="header-logo">
+							<a href="#" class="logo"> <img src="./img/logo.png" alt="">
+							</a>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="header-search">
+							<form th:action="@{/timKiemSanPhamTheoTen}" method="get">
+								<input class="input" placeholder="Nhập tên sản phẩm" name="tensanpham">
+								<button type="submit" class="search-btn">Tìm kiếm</button>
+							</form>
+						</div>
+					</div>
+					<div class="col-md-3 clearfix">
+						<div class="header-ctn">
+							<div th:if="${tongSoSanPhamYeuThich} != null">
+								<a th:href="@{/banhang/sanphamyeuthich}"> <i class="fa fa-heart-o"></i> <span>Sản phẩm yêu thích</span>
+									<div class="qty" th:text="${tongSoSanPhamYeuThich}"></div>
+								</a>
+							</div>
+							<div th:if="${tongSoSanPhamYeuThich} == null">
+								<a th:href="@{/banhang/sanphamyeuthich}"> <i class="fa fa-heart-o"></i> <span>Sản phẩm yêu thích</span>
+									<div class="qty">0</div>
+								</a>
+							</div>
+							<div class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown"
+									aria-expanded="true"> <i class="fa fa-shopping-cart"></i> <span>Giỏ hàng</span>
+									<div class="qty" th:if="${tongSoSanPhamGioHang} != null" th:text="${tongSoSanPhamGioHang}"></div>
+									<div class="qty" th:if="${tongSoSanPhamGioHang} == null" th:text="'0'"></div>
+								</a>
+								<div class="cart-dropdown" th:if="${tongSoSanPhamGioHang} == null">
+									<div class="cart-list">
+									<a th:href="@{/banhang/giohang}" th:text="'Mua hàng'"></a>
+								</div>
+							</div>
+								<div class="cart-dropdown" th:if="${tongSoSanPhamGioHang} != null">
+								
+									<div class="cart-summary">
+										<small th:text="${'Tổng số sản phẩm: ' + tongSoSanPhamGioHang}"></small>
+										<h5 th:text="${'Tổng số tiền: ' + #numbers.formatDecimal(tongSoTien,3,'POINT',0,'COMMA') +' đ'}"></h5>
+									</div>
+									<div class="cart-btns">
+										<a th:href="@{/banhang/giohang}" >Xem giỏ hàng</a> <a href="/banhang/thanhtoan">Thanh toán <i
+											class="fa fa-arrow-circle-right"></i></a>
+									</div>
+								</div>
+							</div>
+							<div class="menu-toggle">
+								<a href="#"> <i class="fa fa-bars"></i> <span>Menu</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<footer id="footer" th:fragment="footer">
+		<div class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3 col-xs-6">
+						<div class="footer">
+							<h3 class="footer-title">Về chúng tôi</h3>
+							<ul class="footer-links">
+								<li><a href="#"><i class="fa fa-map-marker"></i> Tòa nhà Thủy Linh , Số 33 Thái Hà, Trung Liệt, Đống Đa, Hà Nội</a></li>
+								<li><a href="#"><i class="fa fa-phone"></i>024.3537.1526</a></li>
+								<li><a href="#"><i class="fa fa-envelope-o"></i>info@thuylinh.vn</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-3 col-xs-6">
+						<div class="footer">
+							<h3 class="footer-title">Danh mục</h3>
+							<ul class="footer-links">
+								<li><a href="/danhsachsanpham">Danh mục sản phẩm</a></li>
+								<li><a href="/danhsachtintucfrontend">Tin tức</a></li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="clearfix visible-xs"></div>
+					<div class="col-md-3 col-xs-6">
+						<div class="footer">
+							<h3 class="footer-title">Dịch vụ</h3>
+							<ul class="footer-links">
+								<li><a href="/banhang/thongtincanhan">Tài khoản của tôi</a></li>
+								<li><a href="/banhang/giohang">Giỏ hàng</a></li>
+								<li><a href="/banhang/sanphamyeuthich">Sản phẩm yêu thích</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script th:src="@{/khachhang/js/jquery.min.js}" type="text/javascript"></script>
+		<script th:src="@{/khachhang/js/bootstrap.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/khachhang/js/slick.min.js}" type="text/javascript"></script>
+		<script th:src="@{/khachhang/js/nouislider.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/khachhang/js/jquery.zoom.min.js}"
+			type="text/javascript"></script>
+		<script th:src="@{/khachhang/js/main.js}" type="text/javascript"></script>
+		<script th:src="@{/quantri/plugins/jquery/jquery.min.js}" type="text/javascript"></script>
+<script th:src="@{/quantri/plugins/jquery-ui/jquery-ui.min.js}" type="text/javascript"></script>
+		<script th:src="@{https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js}" type="text/javascript"></script>
+<script th:src="@{https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js}" type="text/javascript"></script>
+	</footer>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${donHang}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<div class="card">
+				<div class="card-block">
+					<br>
+					<p class="text-success" th:if="${status != null}"
+						th:text="${status}"></p>
+					<form th:action="@{/admin/timKiemDonHangByTen}"
+						class="form-inline ml-3 float-right" method="get">
+						<input class="form-control form-control-navbar" type="search"
+							name="search" placeholder="Tìm kiếm" aria-label="Tìm kiếm">
+						<div class="input-group-append">
+							<button class="btn btn-info float-right nBtn" type="submit">
+								<i class="fas fa-search"></i>
+							</button>
+						</div>
+					</form>
+						<div class="form-inline ml-3 float-right">
+						<select class="form-control" name="idthanhtoan" id="idthanhtoan" onchange="location = this.options[this.selectedIndex].value;">
+							<option value="">Trạng thái đơn hàng...</option>
+						<option value="/admin/trangthaidonhang/0">Chưa xác nhận</option>
+						<option value="/admin/trangthaidonhang/1">Đang vận chuyển</option>
+						<option value="/admin/trangthaidonhang/2">Đã hoàn thành</option>
+						<option value="/admin/trangthaidonhang/3">Đã hủy</option>
+						</select>
+					</div>
+				
+					<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>STT</th>
+								<th>ID Chi tiết</th>
+								<th>Người duyệt</th>
+								<th>Người mua</th>
+								<th>Tổng giá trị</th>
+								<th>Người nhận</th>
+								<th>Địa chỉ</th>
+								<th>Email</th>
+								<th>Điện thoại</th>
+								<th>Trạng thái thanh toán</th>
+								<th>Hình thức thanh toán</th>
+								<th>Hình thức vận chuyển</th>
+								<th>Ngày tạo</th>
+								<th>Trạng thái đơn hàng</th>
+								<th>Ghi chú</th>
+								<th>Chi tiết đơn hàng</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="listDonHang,iterStat : ${listDonHang}">
+								<td th:text="${iterStat.index + 1 + items}"></td>
+								<td><a
+										th:href="@{/admin/findonedonhang/(id=${listDonHang.id})}"
+										th:text="${listDonHang.idChitietdonhang}"></a></td>
+								<td th:if="${listDonHang.idNguoiduyet == null }"><small
+									class="badge badge-primary">Chưa phê duyệt</small></td>
+									<td th:if="${listDonHang.idNguoiduyet != null}" th:text="${listDonHang.idNguoiduyet.hoten}"></td>
+								<td th:text="${listDonHang.idNguoidung.hoten}"></td>
+								<td
+									th:text="${#numbers.formatDecimal(listDonHang.tongsotien,3,'POINT',0,'COMMA') +' đ'}"></td>
+									<td th:text="${listDonHang.tennguoinhan}"></td>
+									<td th:text="${listDonHang.diachi}"></td>
+									<td th:text="${listDonHang.email}"></td>
+									<td th:text="${listDonHang.dienthoai}"></td>
+								<td th:if="${listDonHang.trangthaithanhtoan} == false"><small
+									class="badge badge-primary">Chưa thanh toán</small></td>
+									<td th:if="${listDonHang.trangthaithanhtoan} == true"><small
+									class="badge badge-primary">Đã thanh toán</small></td>
+								<td th:text="${listDonHang.thanhtoan.ten}"></td>
+								<td th:text="${listDonHang.vanchuyen.ten}"></td>
+								<td th:text="${listDonHang.ngaytao}"></td>
+								<td th:if="${listDonHang.trangthaidonhang} == 0"><small
+									class="badge badge-primary">Chưa xác nhận</small></td>
+									<td th:if="${listDonHang.trangthaidonhang} == 1"><small
+									class="badge badge-primary">Đang vận chuyển</small></td>
+									<td th:if="${listDonHang.trangthaidonhang} == 2"><small
+									class="badge badge-primary">Đã hoàn thành</small></td>
+									<td th:if="${listDonHang.trangthaidonhang} == 3"><small
+									class="badge badge-primary">Đã hủy</small></td>
+									<td th:text="${listDonHang.ghichu}"></td>
+								<td><a class="btn btn-primary eBtn"
+									th:href="@{/admin/findonedonhang/(id=${listDonHang.id})}"><span
+										class="glyphicon glyphicon-pencil"></span>Chi tiết</a></td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+					<div th:fragment='paginationbar'>
+						<div>
+							<ul class="pagination">
+								<li class="page-item" th:class="${page.firstPage}?'disabled':''"><span
+									class="page-link" th:if='${page.firstPage}'>← First</span> <a
+									class="page-link" th:if='${not page.firstPage}'
+									th:href='@{${page.url}(page=0,size=${page.size})}'>← First</a></li>
+								<li class="page-item"
+									th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasPreviousPage}'>«</span>
+									<a class="page-link" th:if='${page.hasPreviousPage}'
+									th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
+									title='Go to previous page'>«</a></li>
+								<li class="page-item" th:each='item : ${page.items}'
+									th:class="${item.current}? 'active' : ''"><span
+									class="page-link" th:if='${item.current}'
+									th:text='${item.number}'>1</span> <a class="page-link"
+									th:if='${not item.current}'
+									th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
+										th:text='${item.number}'>1</span></a></li>
+								<li class="page-item"
+									th:class="${page.hasNextPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasNextPage}'>»</span> <a
+									class="page-link" th:if='${page.hasNextPage}'
+									th:href='@{${page.url}(page=${page.number},size=${page.size})}'
+									title='Go to next page'>»</a></li>
+								<li class="page-item"
+									th:class="${page.lastPage}? 'disabled' : ''"><span
+									class="page-link" th:if='${page.lastPage}'>Last →</span> <a
+									class="page-link" th:if='${not page.lastPage}'
+									th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Last
+										→</a></li>
+							</ul>
+						</div>
+					</div>
+					<hr />
+				</div>
+			</div>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+</body>
+</html>

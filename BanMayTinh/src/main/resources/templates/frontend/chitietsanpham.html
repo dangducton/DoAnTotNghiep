@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title th:text="${title}"></title>
+<head th:replace="frontend/layout :: head">
+</head>
+<body>
+	<header th:replace="frontend/layout :: header"> </header>
+		<nav id="navigation">
+		<div class="container">
+			<div id="responsive-nav">
+				<ul class="main-nav nav navbar-nav">
+					<li><a th:href="@{/}">Trang chủ</a></li>
+					<li><a th:href="@{/danhsachsanpham}">Danh sách sản phẩm</a></li>
+					<li><a href="/danhsachtintucfrontend">Tin tức</a></li>
+					<li><a href="/theodoicorona">Theo dõi Corona</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-5 col-md-push-2">
+						<div id="product-main-img">
+							<div class="product-preview" th:each="listAnh : ${listAnh}">
+								<img th:src="${listAnh.urlAnh}" alt="">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2  col-md-pull-5">
+						<div id="product-imgs">
+							<div class="product-preview" th:each="listAnh : ${listAnh}">
+								<img th:src="${listAnh.urlAnh}" alt="">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="product-details">
+							<h2 class="product-name" th:text="${sanPham.ten}"></h2>
+							<div>
+								<h3 class="product-price" th:text="${#numbers.formatDecimal(sanPham.giamgia,3,'POINT',0,'COMMA') +' đ'}"></h3>
+								<del class="product-old-price" th:text="${#numbers.formatDecimal(sanPham.giaban,3,'POINT',0,'COMMA') +' đ'}"></del>
+							</div>
+							<p th:utext="${sanPham.motangan}"></p>
+							<form method="POST" th:action="@{/banhang/themmoivaogiohang}" id="my_form"></form>
+							<div class="add-to-cart">
+								<div class="qty-label">
+									Số lượng
+									<input type="hidden" th:value="${sanPham.id}" name="idSanPham" form="my_form">
+									<input type="number" value="1" name="soluong" form="my_form" min="1" max="10">
+								</div>
+								<button class="add-to-cart-btn" type="submit" form="my_form"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+							</div>
+
+							<ul class="product-btns">
+								<li><a th:href="@{/banhang/themmotsanphamvaosanphamyeuthich/{id}(id = ${sanPham.id})}"><i class="fa fa-heart-o"></i> Thêm vào sản phẩm yêu thích</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div id="product-tab">
+							<ul class="tab-nav">
+								<li class="active"><a data-toggle="tab" href="#tab1">Thông tin</a></li>
+								<li><a data-toggle="tab" href="#tab3">Đánh giá</a></li>
+							</ul>
+							<div class="tab-content">
+								<!-- tab1  -->
+								<div id="tab1" class="tab-pane fade in active">
+									<div class="row">
+										<div class="col-md-12">
+											<p th:utext="${sanPham.mota}"></p>
+										</div>
+									</div>
+								</div>
+
+								<!-- tab3  -->
+								<div id="tab3" class="tab-pane fade in">
+									<div class="row">
+										<p class="text-success" th:if="${status != null}"
+										th:text="${status}"></p>
+										<div class="col-md-6">
+											<div id="reviews">
+												<ul class="reviews">
+													<li th:each="comment : ${comment}">
+														<div class="review-heading">
+															<h5 class="name" th:text="${comment.tennguoidung}"></h5>
+															<p class="date" th:text="${comment.ngaytao}"></p>
+														</div>
+														<div class="review-body">
+															<p th:text="${comment.noidung}"></p>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+									
+										<div class="col-md-3">
+											<div id="review-form">
+												<form class="review-form" method="POST" th:action="@{/banhang/danhgiasanpham}">
+												<input type="hidden" th:value="${sanPham.id}" name="idSanPham"/>
+													<textarea class="input" placeholder="Đánh giá" name="noidung"></textarea>
+													<button class="primary-btn" type="submit">Gửi</button>
+												</form>
+											</div>
+										</div>
+												<div th:fragment='paginationbar'>
+						<div>
+							<ul class="pagination">
+								<li class="page-item" th:class="${page.firstPage}?'disabled':''"><span
+									class="page-link" th:if='${page.firstPage}'>Trang đầu</span> <a
+									class="page-link" th:if='${not page.firstPage}'
+									th:href='@{${page.url}(page=0,size=${page.size})}'>Trang đầu</a></li>
+								<li class="page-item"
+									th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasPreviousPage}'>«</span>
+									<a class="page-link" th:if='${page.hasPreviousPage}'
+									th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
+									title='Go to previous page'>«</a></li>
+								<li class="page-item" th:each='item : ${page.items}'
+									th:class="${item.current}? 'active' : ''"><span
+									class="page-link" th:if='${item.current}'
+									th:text='${item.number}'>1</span> <a class="page-link"
+									th:if='${not item.current}'
+									th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
+										th:text='${item.number}'>1</span></a></li>
+								<li class="page-item"
+									th:class="${page.hasNextPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasNextPage}'>»</span> <a
+									class="page-link" th:if='${page.hasNextPage}'
+									th:href='@{${page.url}(page=${page.number},size=${page.size})}'
+									title='Go to next page'>»</a></li>
+								<li class="page-item"
+									th:class="${page.lastPage}? 'disabled' : ''"><span
+									class="page-link" th:if='${page.lastPage}'>Trang cuối</span> <a
+									class="page-link" th:if='${not page.lastPage}'
+									th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Trang cuối
+										→</a></li>
+							</ul>
+						</div>
+					</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="section-title text-center">
+							<h3 class="title">Sản phẩm khác</h3>
+						</div>
+					</div>
+					<div class="col-md-3 col-xs-6" th:each="listSanPham : ${listSanPham}">
+							<div class="product">
+								<div class="product-img">
+									<img th:src="${listSanPham.urlAnh}"  alt="">
+								</div>
+								<div class="product-body">
+									<p class="product-category" th:text="'Hãng: ' +${listSanPham.idSanpham.idNhacungcap.ten}"></p>
+									<h3 class="product-name">
+										<a th:href="@{/findsanphambyid/{id}(id = ${listSanPham.idSanpham.id})}"
+											th:text="${listSanPham.idSanpham.ten}"></a>
+									</h3>
+									<h4 class="product-price" th:text="${#numbers.formatDecimal(listSanPham.idSanpham.giamgia,3,'POINT',0,'COMMA') +' đ'}">
+									</h4>
+									<del class="product-old-price" th:text="${#numbers.formatDecimal(listSanPham.idSanpham.giaban,3,'POINT',0,'COMMA') +' đ'}"></del>
+									<div class="product-btns">
+									<a th:href="@{/banhang/themmotsanphamvaosanphamyeuthich/{id}(id = ${listSanPham.idSanpham.id})}">
+										<button class="add-to-wishlist">
+											<i class="fa fa-heart-o"></i><span class="tooltipp"></span>
+										</button>
+										</a>
+									</div>
+								</div>
+								<div class="add-to-cart">
+								<a th:href="@{/banhang/themmotsanphamvaogiohang/{id}(id = ${listSanPham.idSanpham.id})}">
+									<button class="add-to-cart-btn">
+										<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
+									</button>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	<div id="newsletter" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="newsletter">
+						<p>
+						<strong>LIÊN HỆ VỚI CHÚNG TÔI NHÉ</strong>
+						</p>
+						<form action="#" th:action="@{/guilienhe}" method="get">
+							<input class="input" type="email" name="email" placeholder="Email"/>
+							<input class="input" type="text" name="hoten" placeholder="Họ tên"/>
+							<input class="input" type="text" name="noidung" placeholder="Nội dung"/>
+							<br>
+							<button class="newsletter-btn" type="submit">
+								<i class="fa fa-envelope"></i> LIÊN HỆ
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="frontend/layout :: footer"> </footer>
+</body>
+</html>

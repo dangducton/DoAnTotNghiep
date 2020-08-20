@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<meta charset="UTF-8">
+<title>Ứng dụng theo dõi Coronavirus</title>
+<head th:replace="frontend/layout :: head">
+<link rel="stylesheet"
+	th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css}" />
+<link rel="stylesheet"
+	th:href="@{https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css}" />
+</head>
+<body>
+	<header th:replace="frontend/layout :: header"> </header>
+	<!-- NAVIGATION -->
+	<nav id="navigation">
+		<div class="container">
+			<div id="responsive-nav">
+				<ul class="main-nav nav navbar-nav">
+					<li><a th:href="@{/}">Trang chủ</a></li>
+					<li><a th:href="@{/danhsachsanpham}">Danh sách sản phẩm</a></li>
+					<li><a href="/danhsachtintucfrontend">Tin tức</a></li>
+					<li><a href="/theodoicorona">Theo dõi Corona</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div id="breadcrumb" class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3 class="breadcrumb-header">Theo dõi Corona</h3>
+					<ul class="breadcrumb-tree">
+						<li><a href="#">Trang chủ</a></li>
+						<li class="active">Theo dõi Corona</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="section">
+		<div class="container">
+			<div class="row">
+			<h1 style="text-align:center">Ứng dụng theo dõi Coronavirus</h1>
+				<div class="col-md-6">
+					<p>Ứng dụng liệt kê các trường hợp được báo cáo trên toàn cầu</p>
+					<div class="jumbotron">
+						<h1 class="display-4" th:text="${totalReportedCases}"></h1>
+						<p class="lead">Tổng số trường hợp được báo cáo tính đến hôm
+							nay</p>
+						<hr class="my-4">
+						<p>
+							<span> Các trường hợp mới từ ngày hôm trước:</span> <span
+								th:text="${totalNewCases}"></span>
+						</p>
+						<hr class="my-4">
+						<p>
+						<span>Số ca tử vọng:</span> <span
+								th:text="${totalDeaths}"></span>
+								<hr class="my-4">
+							<span> Tỷ lệ tử vọng:</span> <span
+								th:text="${ratioDeaths}"></span>
+						</p>
+						<hr class="my-4">
+						<p>
+						<span>Số người khỏi bệnh:</span> <span
+								th:text="${totalRecovered}"></span>
+								<hr class="my-4">
+							<span> Tỷ lệ khỏi bệnh:</span> <span
+								th:text="${ratioRecovered}"></span>
+						</p>
+						<a class="btn btn-primary" href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series">Xem thêm</a>
+					</div>
+				</div>
+				<div class="col-md-6">
+						<p>Ứng dụng liệt kê các trường hợp được báo cáo trên Việt Nam</p>
+						<div class="jumbotron">
+						<h1 class="display-4" th:text="${totalReportedCasesVietNam}"></h1>
+						<p class="lead">Tổng số trường hợp được báo cáo tính đến hôm
+							nay</p>
+						<hr class="my-4">
+						<p>
+							<span> Các trường hợp mới từ ngày hôm trước:</span> <span
+								th:text="${totalNewCasesVietNam}"></span>
+						</p>
+						<hr class="my-4">
+						<p>
+						<span>Số ca tử vọng:</span> <span
+								th:text="${totalDeathsVietNam}"></span>
+								<hr class="my-4">
+							<span> Tỷ lệ tử vọng:</span> <span
+								th:text="${ratioDeathsVietNam}"></span>
+						</p>
+						<hr class="my-4">
+						<p>
+						<span>Số người khỏi bệnh:</span> <span
+								th:text="${totalRecoveredVietNam}"></span>
+								<hr class="my-4">
+							<span> Tỷ lệ khỏi bệnh:</span> <span
+								th:text="${ratioRecoveredVietNam}"></span>
+						</p>
+						<a class="btn btn-primary" href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports">Xem thêm</a>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<h4>
+						<span> Tổng số ca</span>
+					</h4>
+					<table id="example1" class="table table-striped table-bordered"
+						style="width: 100%">
+						<thead>
+							<tr>
+								<th>Thành phố</th>
+								<th>Quốc gia</th>
+								<th>Tổng số ca</th>
+								<th>Thay đổi với ngày gần nhất</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="locationStat : ${locationStats}">
+								<td th:text="${locationStat.state}"></td>
+								<td th:text="${locationStat.country}"></td>
+								<td th:text="${locationStat.latestTotalCases}">0</td>
+								<td th:text="${locationStat.diffFromPrevDay}">0</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-8">
+					<h4>
+						<span> Tỷ lệ</span>
+					</h4>
+					<table id="example2" class="table table-striped table-bordered"
+						style="width: 100%">
+						<thead>
+							<tr>
+								<th>Thành phố</th>
+								<th>Quốc gia</th>
+								<th>Tổng số ca</th>
+								<th>Số người chết</th>
+								<th>Số người khỏi</th>
+								<th>Tỷ lệ chết</th>
+								<th>Tỷ lệ khỏi</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="allDeaths : ${allDeaths}">
+								<td th:text="${allDeaths.ProvinceState}"></td>
+								<td th:text="${allDeaths.CountryRegion}"></td>
+								<td th:text="${allDeaths.Confirmed}"></td>
+								<td th:text="${allDeaths.Deaths}"></td>
+								<td th:text="${allDeaths.Recovered}"></td>
+								<td th:text="${allDeaths.ratioDeaths}">0</td>
+								<td th:text="${allDeaths.ratioRecovered}">0</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="map"></div>
+	<div id="newsletter" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="newsletter">
+						<p>
+							<strong>LIÊN HỆ VỚI CHÚNG TÔI NHÉ</strong>
+						</p>
+						<form action="#" th:action="@{/guilienhe}" method="get">
+							<input class="input" type="email" name="email"
+								placeholder="Email" /> <input class="input" type="text"
+								name="hoten" placeholder="Họ tên" /> <input class="input"
+								type="text" name="noidung" placeholder="Nội dung" /> <br>
+							<button class="newsletter-btn" type="submit">
+								<i class="fa fa-envelope"></i> LIÊN HỆ
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="frontend/layout :: footer"> </footer>
+	<script th:src="@{https://code.jquery.com/jquery-3.5.1.js}"></script>
+	<script
+		th:src="@{https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js}"></script>
+	<script
+		th:src="@{https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js}"></script>
+	<script>
+		$(document).ready(function() {
+			$('#example1').DataTable({
+				"pagingType" : "simple",
+				fixedColumns : true,
+				"language" : {
+					"paginate" : {
+						"next" : "Next",
+						"previous" : "Previous",
+					}
+				}
+			});
+		});
+
+		$(document).ready(function() {
+			$('#example2').DataTable({
+				"pagingType" : "simple",
+				fixedColumns : true,
+				"language" : {
+					"paginate" : {
+						"next" : "Next",
+						"previous" : "Previous",
+					}
+				}
+			});
+		});
+
+		$(document).ready(function() {
+			$('#example3').DataTable({
+				"pagingType" : "simple",
+				fixedColumns : true,
+				"language" : {
+					"paginate" : {
+						"next" : "Next",
+						"previous" : "Previous",
+					}
+				}
+			});
+		});
+	</script>
+	<script th:inline="javascript">
+  var user = ${position} ;
+
+   function plotUser(user) {
+       // The location of Uluru
+       var uluru = {lat: position.latitude, lng: position.longitude};
+       // The map, centered at Uluru
+       var map = new google.maps.Map(
+               document.getElementById('map'), {zoom: 4, center: uluru});
+       // The marker, positioned at Uluru
+       var marker = new google.maps.Marker({position: uluru, map: map});
+   }
+
+  function loadUsers()
+   {
+        var user = ${position} ;
+        for(var i=0;i<users.length;i++)
+        {
+            plotUser(users[i]);
+        }           
+   }
+  </script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoXKdRGEd75CKBV6xAaaD-gSFLC0w9E5A&callback=initMap">
+</script>
+</body>
+</html>

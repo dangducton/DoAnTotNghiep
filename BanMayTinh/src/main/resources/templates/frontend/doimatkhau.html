@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title th:text="${title}"></title>
+<head th:replace="frontend/layout :: head">
+</head>
+<body>
+	<header th:replace="frontend/layout :: header"> </header>
+		<nav id="navigation">
+		<div class="container">
+			<div id="responsive-nav">
+				<ul class="main-nav nav navbar-nav">
+					<li><a th:href="@{/}">Trang chủ</a></li>
+					<li><a th:href="@{/danhsachsanpham}">Danh sách sản phẩm</a></li>
+					<li><a href="/danhsachtintucfrontend">Tin tức</a></li>
+					<li><a href="/theodoicorona">Theo dõi Corona</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div id="breadcrumb" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<h3 class="breadcrumb-header">Thông tin các nhân</h3>
+					<ul class="breadcrumb-tree">
+						<li><a href="#">Trang chủ</a></li>
+						<li class="active">Thông tin các nhân</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="section">
+		<div class="container-fluid">
+			<div class="row">
+				<p class="text-danger" th:if="${status != null}" th:text="${status}"></p>
+				<div class="col-md-4">
+					<h4>Thông tin các nhân</h4>
+					<p class="text-success" th:if="${status != null}"
+						th:text="${status}"></p>
+					<form enctype="multipart/form-data"
+						th:action="@{/banhang/updateNguoiDung}" method="POST">
+						<div class="form-group">
+							<label for="inputEmail4">Email</label> <input type="email"
+								class="form-control" id="email" name="email"
+								th:value="${thongtinnguoidung.email}" disabled>
+						</div>
+						<input type="hidden" id="id" th:name="id"
+							th:value="${thongtinnguoidung.id}">
+						<div class="form-group">
+							<label for="inputAddress">Họ tên</label> <input type="text"
+								class="form-control" id="hoten" name="hoten"
+								th:value="${thongtinnguoidung.hoten}">
+						</div>
+						<div class="form-group">
+							<label for="inputAddress">Địa chỉ</label> <input type="text"
+								class="form-control" id="diachi" name="diachi"
+								th:value="${thongtinnguoidung.diachi}">
+						</div>
+						<div class="form-group">
+							<label for="inputAddress">Điện thoại</label> <input type="text"
+								class="form-control" id="dienthoai" name="dienthoai"
+								th:value="${thongtinnguoidung.dienthoai}">
+						</div>
+
+						<div class="form-row">
+							<div class="form-group col-md-4">
+								<label for="">Giới tính</label>
+								<div th:if="${thongtinnguoidung.gioitinh} == 1">
+									<input type="radio" th:name="gioitinh" id="gioitinh" value="1"
+										checked="checked"> <label class="radio-inline"
+										for="nam">Nam</label> <input type="radio" th:name="gioitinh"
+										id="gioitinh" value="2"> <label class="radio-inline"
+										for="nu">Nữ</label>
+								</div>
+								<div th:if="${thongtinnguoidung.gioitinh} == 2">
+									<input type="radio" th:name="gioitinh" id="gioitinh" value="2"
+										checked="checked"> <label class="radio-inline"
+										for="nam">Nữ</label> <input type="radio" th:name="gioitinh"
+										id="gioitinh" value="1"> <label class="radio-inline"
+										for="nu">Nam</label>
+								</div>
+								<div th:if="${thongtinnguoidung.gioitinh} == null">
+									<input type="radio" th:name="gioitinh" id="gioitinh" value="1">
+									<label class="radio-inline" for="nam">Nam</label> <input
+										type="radio" th:name="gioitinh" id="gioitinh" value="2">
+									<label class="radio-inline" for="nu">Nữ</label>
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								<label for="file">Ảnh người dùng:</label> <img id="myImage"
+									th:src="@{${thongtinnguoidung.anh}}"
+									style="border: 1px; width: 100px; height: 100px" />
+							</div>
+						</div>
+						<div class="form-group">
+							<input id="fileInput" type="file" name="uploadingFiles"
+								onchange="updateSize();" multiple>
+						</div>
+						<button type="submit" class="btn btn-primary">Cập nhật
+							thông tin</button>
+					</form>
+				</div>
+				<div class="col-md-8">
+					<h4>Đổi mật khẩu</h4>
+					<p class="text-success" th:if="${status != null}"
+						th:text="${status}"></p>
+					<form th:action="@{/banhang/doimatkhau}" method="POST">
+						<div class="form-group row">
+							<label for="inputPassword" class="col-sm-2 col-form-label">Mật
+								khẩu cũ</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" id="matkhaucu"
+									name="matkhaucu" placeholder="Mật khẩu cũ">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="inputPassword" class="col-sm-2 col-form-label">Mật
+								khẩu mới</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" id="matkhaumoi"
+									name="matkhaumoi" placeholder="Mật khẩu mới">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="inputPassword" class="col-sm-2 col-form-label">Nhập
+								lại mật khẩu mới</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control"
+									id="nhaplaimatkhaumoi" name="nhaplaimatkhaumoi"
+									placeholder="Nhập lại mật khẩu mới">
+							</div>
+						</div>
+						<button type="submit" class="btn btn-info">Đổi mật khẩu</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="newsletter" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="newsletter">
+						<p>
+						<strong>LIÊN HỆ VỚI CHÚNG TÔI NHÉ</strong>
+						</p>
+						<form action="#" th:action="@{/guilienhe}" method="get">
+							<input class="input" type="email" name="email" placeholder="Email"/>
+							<input class="input" type="text" name="hoten" placeholder="Họ tên"/>
+							<input class="input" type="text" name="noidung" placeholder="Nội dung"/>
+							<br>
+							<button class="newsletter-btn" type="submit">
+								<i class="fa fa-envelope"></i> LIÊN HỆ
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="frontend/layout :: footer"> </footer>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${danhMuc}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<p class="text-success" th:if="${status != null}" th:text="${status}"></p>
+			<form id="second_form" enctype="multipart/form-data"
+				th:action="@{/admin/updateNhanVienHeThong}" method="POST">
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="inputCity">Họ tên:</label> <input type="text"
+							class="form-control" id="hoten" name="hoten" th:value="${thongtinnguoidung.hoten}"/>
+							<input type="hidden" id="id" th:name="id" th:value="${thongtinnguoidung.id}">
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity"> Email:</label> <input type="text"
+							class="form-control" id="email" name="email" th:value="${thongtinnguoidung.email}" disabled/>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity" style="width: 125px;">Điện thoại:</label> <input
+							type="text" class="form-control" id="dienthoai" name="dienthoai" th:value="${thongtinnguoidung.dienthoai}"/>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="inputCity"> Địa chỉ:</label> <input type="text"
+							class="form-control" id="diachi" name="diachi" th:value="${thongtinnguoidung.diachi}"/>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="">Giới tính</label>
+						<div th:if="${thongtinnguoidung.gioitinh} == 1">
+							<input type="radio" th:name="gioitinh" id="gioitinh" value="1"
+								checked="checked"> <label class="radio-inline" for="nam">Nam</label>
+							<input type="radio" th:name="gioitinh" id="gioitinh" value="2">
+							<label class="radio-inline" for="nu">Nữ</label>
+						</div>
+						<div th:if="${thongtinnguoidung.gioitinh} == 2">
+							<input type="radio" th:name="gioitinh" id="gioitinh" value="2"
+								checked="checked"> <label class="radio-inline" for="nam">Nữ</label>
+							<input type="radio" th:name="gioitinh" id="gioitinh" value="1">
+							<label class="radio-inline" for="nu">Nam</label>
+						</div>
+						<div th:if="${thongtinnguoidung.gioitinh} == null">
+							<input type="radio" th:name="gioitinh" id="gioitinh" value="1">
+							<label class="radio-inline" for="nam">Nam</label> <input
+								type="radio" th:name="gioitinh" id="gioitinh" value="2">
+							<label class="radio-inline" for="nu">Nữ</label>
+						</div>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="file">Ảnh:</label>
+					<img id="myImage" th:src="@{${thongtinnguoidung.anh}}" style="border:1px;width: 100px;height: 100px" />
+				</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="inputCity"> Mật khẩu:</label> <input type="password"
+							class="form-control" id="matkhau" name="matkhau" />
+					</div>
+
+					<div class="form-group col-md-4">
+						<label for="inputCity" style="width: 125px;">Nhập lại mật
+							khẩu:</label> <input type="password" class="form-control"
+							id="nhaplaimatkhau" name="nhaplaimatkhau" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="motangan">Ảnh người dùng:</label> <input id="fileInput"
+						type="file" name="uploadingFiles" onchange="updateSize();"
+						multiple> Tổng số files: <span id="fileNum">0</span>; Tổng
+					lưu lượng: <span id="fileSize">0</span>
+				</div>
+				<input class="btn btn-primary" type="submit" value="Lưu" />
+			</form>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+
+
+	<script>
+            function updateSize() {
+                var nBytes = 0,
+                        oFiles = document.getElementById("fileInput").files,
+                        nFiles = oFiles.length;
+                for (var nFileId = 0; nFileId < nFiles; nFileId++) {
+                    nBytes += oFiles[nFileId].size;
+                }
+
+                var sOutput = nBytes + " bytes";
+                // optional code for multiples approximation
+                for (var aMultiples = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"], nMultiple = 0, nApprox = nBytes / 1024; nApprox > 1; nApprox /= 1024, nMultiple++) {
+                    sOutput = nApprox.toFixed(3) + " " + aMultiples[nMultiple] + " (" + nBytes + " bytes)";
+                }
+                // end of optional code
+
+                document.getElementById("fileNum").innerHTML = nFiles;
+                document.getElementById("fileSize").innerHTML = sOutput;
+            }
+        </script>
+</body>
+</html>

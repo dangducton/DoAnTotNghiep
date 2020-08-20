@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${donHang}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<div class="card">
+				<div class="card-block">
+					<h3 class="text-info" th:if="${status != null}"
+						th:text="${status}"></h3>
+				
+					<hr />
+					<div style="border: 0px solid black">Tổng giá nhập sản phẩm:<p class="font-weight-normal" th:text="${#numbers.formatDecimal(tongTienNhap,3,'POINT',0,'COMMA') +' đ'}"></p></div>
+					<div style="border: 0px solid black">Tổng giá bán sản phẩm:<p class="font-weight-normal" th:text="${#numbers.formatDecimal(tongTienBan,3,'POINT',0,'COMMA') +' đ'}"></p></div>
+					<div style="border: 0px solid black">Tổng số sản phẩm bán được:<p class="font-weight-normal" th:text="${soLuong}"></p></div>
+					<div style="border: 0px solid black">Tổng doanh thu sản phẩm:<p class="font-weight-normal" th:text="${#numbers.formatDecimal(tongDoanhThu,3,'POINT',0,'COMMA') +' đ'}"></p></div>
+						<a th:if="${abc == '1'}" class="btn btn-primary"
+						th:href="@{/quantri/exportdoanhthutheongay/{ngay}/{thang}/{nam}(ngay = ${ngay}, thang = ${thang}, nam = ${nam})}"><span
+						class="glyphicon glyphicon-pencil"></span>Xuất báo cáo</a> <a
+						th:if="${abc == '2'}" class="btn btn-primary"
+						th:href="@{/quantri/exportdoanhthutheothang/{thang}/{nam}(thang = ${thang}, nam = ${nam})}"><span
+						class="glyphicon glyphicon-pencil"></span>Xuất báo cáo</a> <a
+						th:if="${abc == '3'}" class="btn btn-primary"
+						th:href="@{/quantri/exportdoanhthutheonam/{nam}(nam = ${nam})}"><span
+						class="glyphicon glyphicon-pencil"></span>Xuất báo cáo</a>
+					<hr />
+				</div>
+			</div>
+
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+
+	<script src="../static/quantri/js/danhmuc.js"
+		th:src="@{/quantri/js/danhmuc.js}" type="text/javascript"></script>
+</body>
+</html>

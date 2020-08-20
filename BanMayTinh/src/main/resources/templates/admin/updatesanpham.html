@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${tenSanPham}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<form id="second_form" enctype="multipart/form-data"
+				th:action="@{/admin/updateSanPham}" method="POST">
+				<div class="form-group">
+					<input class="form-control" id="ngaytao" name="ngaytao"
+						type="hidden" th:value="${sanPham.ngaytao}" />
+				</div>
+				<div class="form-group">
+					<input class="form-control" id="id" name="id"
+						type="hidden" th:value="${sanPham.id}" />
+				</div>
+					<div class="form-group">
+					<input class="form-control" id="status" name="status"
+						type="hidden" th:value="${sanPham.status}" />
+				</div>
+				<div class="form-group">
+					<label for="tensanpham">Tên sản phẩm:</label> <input type="text"
+						class="form-control" id="tensanpham" name="tensanpham"
+						th:value="${sanPham.ten}" />
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="inputCity"> Giá nhập:</label> <input type="text"
+							class="form-control" id="gianhap" name="gianhap" 
+							th:value="${#numbers.formatInteger(sanPham.gianhap,3)}" />
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity">Giá bán:</label> <input type="text"
+							class="form-control" id="giaban" name="giaban"
+							th:value="${#numbers.formatInteger(sanPham.giaban,3)}" />
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity" style="width: 125px;">Giá khuyến
+							mãi:</label> <input type="text" class="form-control" id="giakhuyenmai" name="giakhuyenmai"
+							th:value="${#numbers.formatInteger(sanPham.giamgia,3)}" />
+					</div>
+				</div>
+				<div class="form-group col-md-6">
+					<label for="nam">Danh mục:</label>
+					<select class="form-control"
+						name="iddanhmuc" id="iddanhmuc">
+						<option value="">Chọn danh mục...</option>
+						<option th:value="${sanPham.idDanhmuc.id}" selected="selected"
+							th:utext="${'Tên danh mục: '+sanPham.idDanhmuc.ten}"></option>
+						<option th:each="danhMuc : ${danhMuc}" th:value="${danhMuc.id}"
+							th:utext="${'Tên danh mục: '+danhMuc.ten}"></option>
+					</select>
+					</div>
+					<div class="form-group col-md-6">
+					<label for="nam">Nhà cung cấp:</label>
+						<select class="form-control"
+						name="idnhacungcap" id="idnhacungcap">
+						<option value="">Chọn nhà cung cấp...</option>
+						<option th:value="${sanPham.idNhacungcap.id}" selected="selected"
+							th:utext="${'Tên danh mục: '+sanPham.idNhacungcap.ten}"></option>
+						<option th:each="nhaCungCap : ${nhaCungCap}" th:value="${nhaCungCap.id}"
+							th:utext="${'Tên nhà cung cấp: '+nhaCungCap.ten}"></option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="motangan">Mô tả ngắn:</label>
+					<textarea id="motangan" name="motangan" rows="5" cols="50"
+						th:text="${sanPham.motangan}"></textarea>
+				</div>
+				<label class="form-check-label" for="gridCheck"> Mô tả chi
+					tiết </label>
+				<textarea id="editor1" name="motachitiet" th:text="${sanPham.mota}">
+				</textarea>
+				<label for="motangan">Danh sách ảnh sản phẩm:</label>
+				<table class="table table-hover">
+					<tbody>
+						<tr th:each="anhSanPham,iterStat : ${anhSanPham}">
+							<td><img th:src="@{${anhSanPham.urlAnh}}"
+								th:width="70" th:height="70" /></td>
+							<td><a class="btn btn-primary eBtn"
+								th:href="@{/admin/xoaanhsanpham/(id=${anhSanPham.id})}"><span
+									class="glyphicon glyphicon-pencil"></span>Xóa</a></td>
+						</tr>
+					</tbody>
+				</table>
+				<input class="btn btn-primary" type="submit" value="Sửa" />
+				</form>
+				
+				<form id="second_form1" enctype="multipart/form-data"
+				th:action="@{/admin/themAnhSanPham}" method="POST">
+				<div class="form-group">
+				<input class="form-control" id="id" name="id"
+						type="hidden" th:value="${sanPham.id}" />
+					<label for="motangan">Thêm ảnh sản phẩm:</label> <input
+						id="fileInput" type="file" name="uploadingFiles"
+						onchange="updateSize();" multiple> Tổng số files: <span
+						id="fileNum">0</span>; Tổng lưu lượng: <span id="fileSize">0</span>
+				</div>
+				<input class="btn btn-primary" type="submit" value="Thêm ảnh" />
+			</form>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+<script>
+        CKEDITOR.replace('motangan');
+        </script>
+	<script>
+        CKEDITOR.replace('editor1');
+        </script>
+	<script>
+            function updateSize() {
+                var nBytes = 0,
+                        oFiles = document.getElementById("fileInput").files,
+                        nFiles = oFiles.length;
+                for (var nFileId = 0; nFileId < nFiles; nFileId++) {
+                    nBytes += oFiles[nFileId].size;
+                }
+
+                var sOutput = nBytes + " bytes";
+                // optional code for multiples approximation
+                for (var aMultiples = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"], nMultiple = 0, nApprox = nBytes / 1024; nApprox > 1; nApprox /= 1024, nMultiple++) {
+                    sOutput = nApprox.toFixed(3) + " " + aMultiples[nMultiple] + " (" + nBytes + " bytes)";
+                }
+                // end of optional code
+
+                document.getElementById("fileNum").innerHTML = nFiles;
+                document.getElementById("fileSize").innerHTML = sOutput;
+            }
+        </script>
+        <script src="../static/quantri/js/updatesanpham.js" th:src="@{/quantri/js/updatesanpham.js}"
+        type="text/javascript"></script>
+</body>
+</html>

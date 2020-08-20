@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${danhMuc}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<p class="text-success" th:if="${status != null}" th:text="${status}"></p>
+			<form id="second_form" enctype="multipart/form-data"
+				th:action="@{/admin/themtintuc}" method="POST">
+				<div class="form-group">
+					<label for="tensanpham">Tên tin tức:</label> <input type="text"
+						class="form-control" id="tentintuc" name="tentintuc" />
+				</div>
+				<div class="form-group">
+					<label for="motangan">Mô tả ngắn:</label>
+					<textarea id="motangan" name="motangan" rows="5" cols="50"></textarea>
+				</div>
+				<label class="form-check-label" for="gridCheck">Nội dung:</label>
+				<textarea id="editor1" name="motachitiet">
+				</textarea>
+				<div class="form-group">
+					<label for="motangan">Ảnh tin tức:</label> <input id="fileInput"
+						type="file" name="uploadingFiles" onchange="updateSize();"
+						multiple> Tổng số files: <span id="fileNum">0</span>; Tổng
+					lưu lượng: <span id="fileSize">0</span>
+				</div>
+				<input class="btn btn-primary" type="submit" value="Lưu" />
+			</form>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+
+	<script>
+        CKEDITOR.replace('editor1');
+        </script>
+	<script>
+            function updateSize() {
+                var nBytes = 0,
+                        oFiles = document.getElementById("fileInput").files,
+                        nFiles = oFiles.length;
+                for (var nFileId = 0; nFileId < nFiles; nFileId++) {
+                    nBytes += oFiles[nFileId].size;
+                }
+
+                var sOutput = nBytes + " bytes";
+                // optional code for multiples approximation
+                for (var aMultiples = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"], nMultiple = 0, nApprox = nBytes / 1024; nApprox > 1; nApprox /= 1024, nMultiple++) {
+                    sOutput = nApprox.toFixed(3) + " " + aMultiples[nMultiple] + " (" + nBytes + " bytes)";
+                }
+                // end of optional code
+
+                document.getElementById("fileNum").innerHTML = nFiles;
+                document.getElementById("fileSize").innerHTML = sOutput;
+            }
+        </script>
+	<script src="../static/quantri/js/themtintucjs" th:src="@{/quantri/js/themtintuc.js}"
+		type="text/javascript"></script>
+</body>
+</html>

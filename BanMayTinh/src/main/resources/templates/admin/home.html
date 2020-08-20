@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title th:text="${title}"></title>
+<head th:replace="admin/layout :: head">
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0 text-dark">Thống kê</h1>
+						</div>
+					</div>
+				</div>
+			</div>
+	<section class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-info"><i
+									class="far fa-envelope"></i></span>
+
+								<div class="info-box-content">
+									<span class="info-box-text">Đánh giá từ khách hàng</span> <span
+										class="info-box-number" th:text="${danhGia}"></span>
+								</div>
+								<!-- /.info-box-content -->
+							</div>
+							<!-- /.info-box -->
+						</div>
+						<!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-success"><i
+									class="far fa-flag"></i></span>
+
+								<div class="info-box-content">
+									<span class="info-box-text">Tổng số đơn hàng</span> <span
+										class="info-box-number" th:text="${donHang}"></span>
+								</div>
+								<!-- /.info-box-content -->
+							</div>
+							<!-- /.info-box -->
+						</div>
+						<!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-warning"><i
+									class="far fa-copy"></i></span>
+
+								<div class="info-box-content">
+									<span class="info-box-text">Tổng số sản phẩm</span> <span
+										class="info-box-number" th:text="${sanPham}"></span>
+								</div>
+								<!-- /.info-box-content -->
+							</div>
+							<!-- /.info-box -->
+						</div>
+						<!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-danger"><i
+									class="far fa-star"></i></span>
+
+								<div class="info-box-content">
+									<span class="info-box-text">Tổng số lượt yêu thích sản
+										phẩm</span> <span class="info-box-number"
+										th:text="${sanPhamYeuThich}"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box bg-info">
+								<span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+								<div class="info-box-content">
+									<span class="info-box-text">Tổng số người dùng</span> <span
+										class="info-box-number" th:text="${nguoiDung}"></span>
+
+									<div class="progress">
+										<div class="progress-bar" style="width: 70%"></div>
+									</div>
+									<span class="progress-description"> </span>
+								</div>
+								<!-- /.info-box-content -->
+							</div>
+							<!-- /.info-box -->
+						</div>
+						<!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box bg-success">
+								<span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+
+								<div class="info-box-content">
+									<span class="info-box-text">Tổng số quản trị viên</span> <span
+										class="info-box-number" th:text="${quanTri}"></span>
+
+									<div class="progress">
+										<div class="progress-bar" style="width: 70%"></div>
+									</div>
+									<span class="progress-description">  </span>
+								</div>
+								<!-- /.info-box-content -->
+							</div>
+							<!-- /.info-box -->
+						</div>
+						<!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box bg-warning">
+								<span class="info-box-icon"><i
+									class="far fa-calendar-alt"></i></span>
+
+								<div class="info-box-content">
+									<span class="info-box-text">Tổng số tiền nhập</span> <span
+										class="info-box-number"
+										th:text="${#numbers.formatDecimal(tiennhap,3,'POINT',0,'COMMA') +' đ'}"></span>
+
+									<div class="progress">
+										<div class="progress-bar" style="width: 70%"></div>
+									</div>
+									<span class="progress-description">  </span>
+								</div>
+								<!-- /.info-box-content -->
+							</div>
+							<!-- /.info-box -->
+						</div>
+						<!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box bg-danger">
+								<span class="info-box-icon"><i class="fas fa-comments"></i></span>
+
+								<div class="info-box-content">
+									<span class="info-box-text">Tổng số tiền bán</span> <span
+										class="info-box-number"
+										th:text="${#numbers.formatDecimal(tienban,3,'POINT',0,'COMMA') +' đ'}"></span>
+
+									<div class="progress">
+										<div class="progress-bar" style="width: 70%"></div>
+									</div>
+									<span class="progress-description"> </span>
+								</div>
+								<!-- /.info-box-content -->
+							</div>
+							<!-- /.info-box -->
+						</div>
+						<!-- /.col -->
+					</div>
+					<!-- /.row -->
+
+					<!-- =========================================================== -->
+					<div class="row">
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box bg-gradient-info">
+								<span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+								<div class="info-box-content">
+									<span class="info-box-text">Tiền lãi</span> <span
+										class="info-box-number"
+										th:text="${#numbers.formatDecimal(tienlai,3,'POINT',0,'COMMA') +' đ'}"></span>
+
+									<div class="progress">
+										<div class="progress-bar" style="width: 70%"></div>
+									</div>
+									<span class="progress-description"> </span>
+								</div>
+								<!-- /.info-box-content -->
+							</div>
+							<!-- /.info-box -->
+						</div>
+						<!-- /.col -->
+					</div>
+					<!-- /.row -->
+
+					<!-- =========================================================== -->
+
+					<!-- Small Box (Stat card) -->
+					<div class="row">
+						<div class="col-lg-3 col-6">
+							<!-- small card -->
+							<div class="small-box bg-info">
+								<div class="inner">
+									<h3 th:text="${donHangMoi}"></h3>
+
+									<p>Đơn hàng mới</p>
+								</div>
+								<div class="icon">
+									<i class="fas fa-shopping-cart"></i>
+								</div>
+								<a href="/admin/donhang" class="small-box-footer"> Xem thêm <i
+									class="fas fa-arrow-circle-right"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark">
+		</aside>
+	</div>
+</body>
+</html>

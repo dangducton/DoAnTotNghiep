@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${thongTinDonHang}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<form id="second_form" enctype="multipart/form-data"
+				th:action="@{/admin/updateDonHang}" method="POST">
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="inputCity"> ID đơn hàng:</label> <input type="text"
+							class="form-control" id="iddonhang" name="iddonhang"
+							th:value="${donHang.idChitietdonhang}" disabled/>
+							<input class="form-control" id="id" name="id"
+						type="hidden" th:value="${donHang.id}" />
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity">Tổng giá trị:</label> <input type="text"
+							class="form-control" id="tongsotien" name="tongsotien"
+							th:value="${#numbers.formatInteger(donHang.tongsotien,3)}" disabled/>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity" style="width: 125px;">Người mua:</label> <input
+							type="text" class="form-control" id="giakhuyenmai"
+							name="giakhuyenmai" th:value="${donHang.idNguoidung.hoten}" disabled/>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="inputCity"> Tên người nhận:</label> <input type="text"
+							class="form-control" id="iddonhang" name="iddonhang"
+							th:value="${donHang.tennguoinhan}" disabled/>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity">Địa chỉ:</label> <input type="text"
+							class="form-control" id="tongsotien" name="tongsotien"
+							th:value="${donHang.diachi}" disabled/>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity" style="width: 125px;">Email:</label> <input
+							type="text" class="form-control" id="giakhuyenmai"
+							name="giakhuyenmai" th:value="${donHang.email}" disabled/>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="nam">Trạng thái thanh toán:</label> <select
+							class="form-control" name="idtrangthaithanhtoan"
+							id="idtrangthaithanhtoan">
+							<option th:if="${donHang.trangthaithanhtoan}== false"
+								th:value="${donHang.trangthaithanhtoan}" selected="selected"
+								th:utext="${'Chưa thanh toán'}"></option>
+							<option th:if="${donHang.trangthaithanhtoan}== true"
+								th:value="${donHang.trangthaithanhtoan}" selected="selected"
+								th:utext="${'Đã thanh toán'}"></option>
+							<option th:value="true" th:utext="${'Đã thanh toán'}"></option>
+							<option th:value="false" th:utext="${'Chưa thanh toán'}"></option>
+						</select>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="nam">Hình thức vận chuyển:</label> <select
+							class="form-control" name="idhinhthucvanchuyen"
+							id="idhinhthucvanchuyen">
+							<option th:value="${donHang.vanchuyen.id}" selected="selected"
+								th:utext="${'Tên hình thức: '+donHang.vanchuyen.ten}" disabled>
+						</select>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="nam">Hình thức thanh toán:</label> <select
+							class="form-control" name="idhinhthucthanhtoan"
+							id="idhinhthucthanhtoan">
+							<option th:value="${donHang.thanhtoan.id}" selected="selected"
+								th:utext="${'Tên hình thức: '+donHang.thanhtoan.ten}" disabled></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="nam">Trạng thái đơn hàng:</label> <select
+							class="form-control" name="trangthaidonhang"
+							id="trangthaidonhang">
+							<option th:if="${donHang.trangthaidonhang}== 0"
+								th:value="${donHang.trangthaidonhang}" selected="selected"
+								th:utext="${'Chưa xác nhận'}"></option>
+								<option th:if="${donHang.trangthaidonhang}== 1"
+								th:value="${donHang.trangthaidonhang}" selected="selected"
+								th:utext="${'Đang vận chuyển'}"></option>
+								<option th:if="${donHang.trangthaidonhang}== 2"
+								th:value="${donHang.trangthaidonhang}" selected="selected"
+								th:utext="${'Đã hoàn thành'}"></option>
+								<option th:if="${donHang.trangthaidonhang}== 3"
+								th:value="${donHang.trangthaidonhang}" selected="selected"
+								th:utext="${'Đã hủy'}"></option>
+							<option th:value="0" th:utext="${'Chưa xác nhận'}"></option>
+							<option th:value="1" th:utext="${'Đang vận chuyển'}"></option>
+							<option th:value="2" th:utext="${'Đã hoàn thành'}"></option>
+							<option th:value="3" th:utext="${'Đã hủy'}"></option>
+						</select>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="nam">Ngày tạo:</label> <input type="text"
+							class="form-control" id="tongsotien" name="tongsotien"
+							th:value="${donHang.ngaytao}" disabled/>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="nam">Ghi chú:</label> <input type="text"
+							class="form-control" id="tongsotien" name="tongsotien"
+							th:value="${donHang.ghichu}" disabled/>
+					</div>
+				</div>
+				<h3>Sản phẩm đặt mua</h3>
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="shoping__product">Sản phẩm</th>
+							<th>Giá</th>
+							<th>Số lượng</th>
+							<th>Tổng cộng</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="listGioHang : ${listGioHang}">
+							<td class="shoping__cart__item"><img
+								th:src="${listGioHang.anh}" alt="" width="100" height="100" />
+								<a
+								th:href="@{/findsanphambyid/{id}(id = ${listGioHang.idSanPham})}"><h5
+										th:text="${listGioHang.ten}"></h5></a></td>
+							<td class="shoping__cart__price"
+								th:text="${#numbers.formatDecimal(listGioHang.giasanpham,3,'POINT',0,'COMMA') +' đ'}">
+
+							</td>
+							<td class="shoping__cart__quantity">
+								<div class="quantity">
+									<div class="pro-qty">
+										<input type="number" th:value="${listGioHang.soluong}"
+											name="soluong" disabled> <input type="hidden"
+											th:value="${listGioHang.id}" name="idSanPham"/>
+									</div>
+								</div>
+							</td>
+							<td class="shoping__cart__total"
+								th:text="${#numbers.formatDecimal(listGioHang.giasanpham * listGioHang.soluong,3,'POINT',0,'COMMA')+' đ'}">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<a class="btn btn-primary" th:href="@{/admin/findonehoadon/{id}(id=${donHang.id})}"><span
+											class="glyphicon glyphicon-pencil"></span>Tạo hóa đơn</a>
+				<input class="btn btn-primary" type="submit"
+					value="Cập nhật đơn hàng" />
+			</form>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+	<script src="../static/quantri/js/updatesanpham.js"
+		th:src="@{/quantri/js/updatesanpham.js}" type="text/javascript"></script>
+</body>
+</html>

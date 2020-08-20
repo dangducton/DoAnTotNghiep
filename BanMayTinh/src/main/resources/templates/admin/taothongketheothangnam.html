@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${phongBan}"></title>
+<head th:replace="admin/layout :: head">
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<form id="second_form"
+				th:action="@{/admin/thongkesanphambanchaytheonam}" method="get"
+				enctype="multipart/form-data">
+				<h3 class="modal-title">Tạo thống kê sản phẩm bán chạy theo năm</h3>
+
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="ngaysinh">Năm:</label> <select class="form-control"
+							id="nam" th:name="nam">
+							<option value="">Năm</option>
+							<option th:each="nam : ${nam}" th:value="${nam}"
+								th:utext="${'Năm '+ nam}"></option>
+						</select>
+					</div>
+				</div>
+
+				<button type="submit" class="btn btn-primary">Xem thống kê</button>
+			</form>
+			<script>
+				$('#second_form').validate({
+					rules : {
+						nam : {
+							required : true
+						},
+						thang : {
+							required : true
+						}
+					},
+					messages : {
+						nam : {
+							required : 'Yêu cầu chọn năm'
+						},
+						thang : {
+							required : 'Yêu cầu chọn tháng'
+						}
+					},
+					submitHandler : function(form) {
+						form.submit();
+					}
+				});
+			</script>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+</body>
+</html>

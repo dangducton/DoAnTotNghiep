@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title th:text="${title}"></title>
+<head th:replace="frontend/layout :: head">
+</head>
+<body>
+	<header th:replace="frontend/layout :: header"> </header>
+		<nav id="navigation">
+		<div class="container">
+			<div id="responsive-nav">
+				<ul class="main-nav nav navbar-nav">
+					<li><a th:href="@{/}">Trang chủ</a></li>
+					<li><a th:href="@{/danhsachsanpham}">Danh sách sản phẩm</a></li>
+					<li><a href="/danhsachtintucfrontend">Tin tức</a></li>
+					<li><a href="/theodoicorona">Theo dõi Corona</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div id="breadcrumb" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<h3 class="breadcrumb-header">Thông tin các nhân</h3>
+					<ul class="breadcrumb-tree">
+						<li><a href="#">Trang chủ</a></li>
+						<li class="active">Thông tin các nhân</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="section">
+		<div class="container-fluid">
+			<div class="row">
+				<p class="text-danger" th:if="${status != null}" th:text="${status}"></p>
+				<div class="col-md-4">
+					<h4>Thông tin các nhân</h4>
+					<p class="text-success" th:if="${status != null}"
+						th:text="${status}"></p>
+					<form enctype="multipart/form-data"
+						th:action="@{/banhang/updateNguoiDung}" method="POST">
+						<div class="form-group">
+							<label for="inputEmail4">Email</label> <input type="email"
+								class="form-control" id="email" name="email"
+								th:value="${thongtinnguoidung.email}" disabled>
+						</div>
+						<input type="hidden" id="id" th:name="id"
+							th:value="${thongtinnguoidung.id}">
+						<div class="form-group">
+							<label for="inputAddress">Họ tên</label> <input type="text"
+								class="form-control" id="hoten" name="hoten"
+								th:value="${thongtinnguoidung.hoten}">
+						</div>
+						<div class="form-group">
+							<label for="inputAddress">Địa chỉ</label> <input type="text"
+								class="form-control" id="diachi" name="diachi"
+								th:value="${thongtinnguoidung.diachi}">
+						</div>
+						<div class="form-group">
+							<label for="inputAddress">Điện thoại</label> <input type="text"
+								class="form-control" id="dienthoai" name="dienthoai"
+								th:value="${thongtinnguoidung.dienthoai}">
+						</div>
+
+						<div class="form-row">
+							<div class="form-group col-md-4">
+								<label for="">Giới tính</label>
+								<div th:if="${thongtinnguoidung.gioitinh} == 1">
+									<input type="radio" th:name="gioitinh" id="gioitinh" value="1"
+										checked="checked"> <label class="radio-inline"
+										for="nam">Nam</label> <input type="radio" th:name="gioitinh"
+										id="gioitinh" value="2"> <label class="radio-inline"
+										for="nu">Nữ</label>
+								</div>
+								<div th:if="${thongtinnguoidung.gioitinh} == 2">
+									<input type="radio" th:name="gioitinh" id="gioitinh" value="2"
+										checked="checked"> <label class="radio-inline"
+										for="nam">Nữ</label> <input type="radio" th:name="gioitinh"
+										id="gioitinh" value="1"> <label class="radio-inline"
+										for="nu">Nam</label>
+								</div>
+								<div th:if="${thongtinnguoidung.gioitinh} == null">
+									<input type="radio" th:name="gioitinh" id="gioitinh" value="1">
+									<label class="radio-inline" for="nam">Nam</label> <input
+										type="radio" th:name="gioitinh" id="gioitinh" value="2">
+									<label class="radio-inline" for="nu">Nữ</label>
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								<label for="file">Ảnh người dùng:</label> <img id="myImage"
+									th:src="@{${thongtinnguoidung.anh}}"
+									style="border: 1px; width: 100px; height: 100px" />
+							</div>
+						</div>
+						<div class="form-group">
+							<input id="fileInput" type="file" name="uploadingFiles"
+								onchange="updateSize();" multiple>
+						</div>
+						<button type="submit" class="btn btn-primary">Cập nhật
+							thông tin</button>
+						<a th:href="@{/banhang/thaydoimatkhau}" class="btn btn-primary">Đổi
+							mật khẩu</a>
+					</form>
+				</div>
+				<div class="col-md-8">
+					<h4>Thông tin chi tiết đơn hàng</h4>
+					<div class="form-row">
+						<div class="form-group col-md-4">
+							<label for="inputCity"> ID đơn hàng:</label> <input type="text"
+								class="form-control" id="iddonhang" name="iddonhang"
+								th:value="${donHang.idChitietdonhang}" disabled /> <input
+								class="form-control" id="id" name="id" type="hidden"
+								th:value="${donHang.id}" />
+						</div>
+						<div class="form-group col-md-4">
+							<label for="inputCity">Tổng giá trị:</label> <input type="text"
+								class="form-control" id="tongsotien" name="tongsotien"
+								th:value="${#numbers.formatInteger(donHang.tongsotien,3)}"
+								disabled />
+						</div>
+						<div class="form-group col-md-4">
+							<label for="inputCity" style="width: 125px;">Người mua:</label> <input
+								type="text" class="form-control" id="giakhuyenmai"
+								name="giakhuyenmai" th:value="${donHang.idNguoidung.hoten}"
+								disabled />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-4">
+							<label for="inputCity"> Tên người nhận:</label> <input
+								type="text" class="form-control" id="iddonhang" name="iddonhang"
+								th:value="${donHang.tennguoinhan}" disabled />
+						</div>
+						<div class="form-group col-md-4">
+							<label for="inputCity">Địa chỉ:</label> <input type="text"
+								class="form-control" id="tongsotien" name="tongsotien"
+								th:value="${donHang.diachi}" disabled />
+						</div>
+						<div class="form-group col-md-4">
+							<label for="inputCity" style="width: 125px;">Email:</label> <input
+								type="text" class="form-control" id="giakhuyenmai"
+								name="giakhuyenmai" th:value="${donHang.email}" disabled />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-4">
+							<label for="nam">Trạng thái thanh toán:</label> <select
+								class="form-control" name="idtrangthaithanhtoan"
+								id="idtrangthaithanhtoan">
+								<option th:if="${donHang.trangthaithanhtoan}== false"
+									th:value="${donHang.trangthaithanhtoan}" selected="selected"
+									th:utext="${'Chưa thanh toán'}" disabled></option>
+								<option th:if="${donHang.trangthaithanhtoan}== true"
+									th:value="${donHang.trangthaithanhtoan}" selected="selected"
+									th:utext="${'Đã thanh toán'}" disabled></option>
+							</select>
+						</div>
+						<div class="form-group col-md-4">
+							<label for="nam">Hình thức vận chuyển:</label> <select
+								class="form-control" name="idhinhthucvanchuyen"
+								id="idhinhthucvanchuyen">
+								<option th:value="${donHang.vanchuyen.id}" selected="selected"
+									th:utext="${'Tên hình thức: '+donHang.vanchuyen.ten}" disabled>
+							</select>
+						</div>
+						<div class="form-group col-md-4">
+							<label for="nam">Hình thức thanh toán:</label> <select
+								class="form-control" name="idhinhthucthanhtoan"
+								id="idhinhthucthanhtoan">
+								<option th:value="${donHang.thanhtoan.id}" selected="selected"
+									th:utext="${'Tên hình thức: '+donHang.thanhtoan.ten}" disabled></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-4">
+							<label for="nam">Trạng thái đơn hàng:</label> <select
+								class="form-control" name="trangthaidonhang"
+								id="trangthaidonhang">
+								<option th:if="${donHang.trangthaidonhang}== 0"
+									th:value="${donHang.trangthaidonhang}" selected="selected"
+									th:utext="${'Chưa xác nhận'}" disabled></option>
+								<option th:if="${donHang.trangthaidonhang}== 1"
+									th:value="${donHang.trangthaidonhang}" selected="selected"
+									th:utext="${'Đang vận chuyển'}" disabled></option>
+								<option th:if="${donHang.trangthaidonhang}== 2"
+									th:value="${donHang.trangthaidonhang}" selected="selected"
+									th:utext="${'Đã hoàn thành'}" disabled></option>
+								<option th:if="${donHang.trangthaidonhang}== 3"
+									th:value="${donHang.trangthaidonhang}" selected="selected"
+									th:utext="${'Đã hủy'}" disabled></option>
+							</select>
+						</div>
+						<div class="form-group col-md-4">
+							<label for="nam">Ngày tạo:</label> <input type="text"
+								class="form-control" id="tongsotien" name="tongsotien"
+								th:value="${donHang.ngaytao}" disabled />
+						</div>
+						<div class="form-group col-md-4">
+							<label for="nam">Ghi chú:</label> <input type="text"
+								class="form-control" id="tongsotien" name="tongsotien"
+								th:value="${donHang.ghichu}" disabled />
+						</div>
+					</div>
+					<h3>Sản phẩm đặt mua</h3>
+					<table class="table">
+						<thead>
+							<tr>
+								<th class="shoping__product">Sản phẩm</th>
+								<th>Giá</th>
+								<th>Số lượng</th>
+								<th>Tổng cộng</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="listGioHang : ${listGioHang}">
+								<td class="shoping__cart__item"><img
+									th:src="${listGioHang.anh}" alt="" width="100" height="100" />
+									<a
+									th:href="@{/findsanphambyid/{id}(id = ${listGioHang.idSanPham})}"><h5
+											th:text="${listGioHang.ten}"></h5></a></td>
+								<td class="shoping__cart__price"
+									th:text="${#numbers.formatDecimal(listGioHang.giasanpham,3,'POINT',0,'COMMA') +' đ'}">
+
+								</td>
+								<td class="shoping__cart__quantity">
+									<div class="quantity">
+										<div class="pro-qty">
+											<input type="number" th:value="${listGioHang.soluong}"
+												name="soluong" disabled> <input type="hidden"
+												th:value="${listGioHang.id}" name="idSanPham" />
+										</div>
+									</div>
+								</td>
+								<td class="shoping__cart__total"
+									th:text="${#numbers.formatDecimal(listGioHang.giasanpham * listGioHang.soluong,3,'POINT',0,'COMMA')+' đ'}">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="newsletter" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="newsletter">
+						<p>
+						<strong>LIÊN HỆ VỚI CHÚNG TÔI NHÉ</strong>
+						</p>
+						<form action="#" th:action="@{/guilienhe}" method="get">
+							<input class="input" type="email" name="email" placeholder="Email"/>
+							<input class="input" type="text" name="hoten" placeholder="Họ tên"/>
+							<input class="input" type="text" name="noidung" placeholder="Nội dung"/>
+							<br>
+							<button class="newsletter-btn" type="submit">
+								<i class="fa fa-envelope"></i> LIÊN HỆ
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="frontend/layout :: footer"> </footer>
+</body>
+</html>

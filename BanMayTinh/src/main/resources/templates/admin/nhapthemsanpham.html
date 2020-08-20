@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${tenSanPham}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<form id="second_form" enctype="multipart/form-data"
+				th:action="@{/admin/nhapsanpham}" method="POST">
+				<div class="form-group">
+					<input class="form-control" id="ngaytao" name="ngaytao"
+						type="hidden" th:value="${sanPham.ngaytao}" />
+				</div>
+				<div class="form-group">
+					<input class="form-control" id="id" name="id"
+						type="hidden" th:value="${sanPham.id}" />
+				</div>
+					<div class="form-group">
+					<input class="form-control" id="status" name="status"
+						type="hidden" th:value="${sanPham.status}" />
+				</div>
+				<div class="form-group">
+					<label for="tensanpham">Tên sản phẩm:</label> <input type="text"
+						class="form-control" id="tensanpham" name="tensanpham"
+						th:value="${sanPham.ten}" disabled />
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="inputCity"> Giá nhập:</label> <input type="text"
+							class="form-control" id="gianhap" name="gianhap" 
+							th:value="${#numbers.formatInteger(sanPham.gianhap,3)}" disabled />
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity">Giá bán:</label> <input type="text"
+							class="form-control" id="giaban" name="giaban"
+							th:value="${#numbers.formatInteger(sanPham.giaban,3)}" disabled />
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputCity" style="width: 125px;">Giá khuyến
+							mãi:</label> <input type="text" class="form-control" id="giakhuyenmai" name="giakhuyenmai"
+							th:value="${#numbers.formatInteger(sanPham.giamgia,3)}" disabled />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="nam">Danh mục:</label> <select class="form-control"
+						name="iddanhmuc" id="iddanhmuc">
+						<option value="">Chọn danh mục...</option>
+						<option th:value="${sanPham.idDanhmuc.id}" selected="selected"
+							th:utext="${'Tên danh mục: '+sanPham.idDanhmuc.ten}" disabled ></option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="motangan">Mô tả ngắn:</label>
+					<textarea id="motangan" name="motangan" rows="5" cols="50"
+						th:text="${sanPham.motangan}" disabled ></textarea>
+				</div>
+				<label class="form-check-label" for="gridCheck"> Mô tả chi
+					tiết </label>
+				<textarea id="editor1" name="motachitiet" th:text="${sanPham.mota}" disabled >
+				</textarea>
+				<label for="motangan">Danh sách ảnh sản phẩm:</label>
+				<table class="table table-hover">
+					<tbody>
+						<tr th:each="anhSanPham,iterStat : ${anhSanPham}">
+							<td><img th:src="@{${anhSanPham.urlAnh}}"
+								th:width="70" th:height="70" /></td>
+						</tr>
+					</tbody>
+				</table>
+					<div class="form-group">
+					<label for="tensanpham">Số lượng nhập:</label> <input type="number"
+						class="form-control" id="soluong" name="soluong"
+						value="0" />
+				</div>
+				<input class="btn btn-primary" type="submit" value="Nhập sản phẩm" />
+				</form>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+
+	<script>
+        CKEDITOR.replace('editor1');
+        </script>       
+</body>
+</html>

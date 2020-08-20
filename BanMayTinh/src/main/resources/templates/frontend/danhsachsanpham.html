@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title th:text="${title}"></title>
+<head th:replace="frontend/layout :: head">
+<script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js}"></script>
+</head>
+<body>
+	<header th:replace="frontend/layout :: header"> </header>
+	<nav id="navigation">
+		<div class="container">
+			<div id="responsive-nav">
+				<ul class="main-nav nav navbar-nav">
+					<li><a th:href="@{/}">Trang chủ</a></li>
+					<li><a th:href="@{/danhsachsanpham}">Danh sách sản phẩm</a></li>
+					<li><a href="/danhsachtintucfrontend">Tin tức</a></li>
+					<li><a href="/theodoicorona">Theo dõi Corona</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="section">
+		<div class="container">
+			<div class="row">
+				<div id="aside" class="col-md-3">
+					<!-- aside Widget -->
+					<form th:action="@{/timKiemSanPham}" method="get">
+					<div class="aside">
+						<h3 class="aside-title">Danh mục sản phẩm</h3>
+						<div class="">
+							<div class="" th:each="danhMuc : ${danhMuc}">
+								<input type="checkbox" name="idDanhMuc" th:text="${danhMuc.ten}"
+            						th:value="${danhMuc.id}" id="brand-1">
+							</div>
+						</div>
+					</div>
+						<div class="aside">
+						<h3 class="aside-title">Danh mục nhà cung cấp</h3>
+						<div>
+							<div th:each="nhaCungCap : ${nhaCungCap}">
+								<input type="checkbox" name="idNhaCungCap" th:text="${nhaCungCap.ten}"
+            						th:value="${nhaCungCap.id}" id="brand-1">
+							</div>
+						</div>
+					</div>
+			
+					<div class="aside">
+						<h3 class="aside-title">Tìm kiếm theo giá sản phẩm</h3>
+						<div class="price-filter">
+						
+							<div class="input-number price-min">
+								<input id="price-min" type="number" name="giabatdau"> <span
+									class="qty-up">+</span> <span class="qty-down">-</span>
+							</div>
+							<div class="input-number price-max">
+								<input id="price-max" type="number" name="giaketthuc"> <span
+									class="qty-up">+</span> <span class="qty-down">-</span>
+							</div>
+							<button type="submit" class="btn btn-danger">Tìm kiếm</button>
+							
+						</div>
+					</div>
+				</form>
+					<div class="aside">
+						<h3 class="aside-title">Top sản phẩm giảm giá</h3>
+						<div class="product-widget" th:each="top3 : ${top3}">
+							<div class="product-img">
+								<img th:src="${top3.urlAnh}" alt="">
+							</div>
+							<div class="product-body">
+								<p class="product-category">Category</p>
+								<h3 class="product-name">
+									<a th:href="@{/findsanphambyid/{id}(id = ${top3.idSanpham.id})}"
+											th:text="${top3.idSanpham.ten}"></a>
+								</h3>
+								<h4 class="product-price" th:text="${#numbers.formatDecimal(top3.idSanpham.giamgia,3,'POINT',0,'COMMA') +' đ'}">
+								</h4>
+								<del class="product-old-price" th:text="${#numbers.formatDecimal(top3.idSanpham.giaban,3,'POINT',0,'COMMA') +' đ'}"></del>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div id="store" class="col-md-9">
+					<div class="row">
+						<div class="col-md-4 col-xs-6" th:each="listSanPham : ${listSanPham}">
+							<div class="product">
+								<div class="product-img">
+									<img th:src="${listSanPham.urlAnh}"  alt="">
+								</div>
+								<div class="product-body">
+									<p class="product-category" th:text="'Hãng: ' +${listSanPham.idSanpham.idNhacungcap.ten}"></p>
+									<h3 class="product-name">
+										<a th:href="@{/findsanphambyid/{id}(id = ${listSanPham.idSanpham.id})}"
+											th:text="${listSanPham.idSanpham.ten}"></a>
+									</h3>
+									<h4 class="product-price" th:text="${#numbers.formatDecimal(listSanPham.idSanpham.giamgia,3,'POINT',0,'COMMA') +' đ'}">
+									</h4>
+									<del class="product-old-price" th:text="${#numbers.formatDecimal(listSanPham.idSanpham.giaban,3,'POINT',0,'COMMA') +' đ'}"></del>
+									<div class="product-btns">
+									<a th:href="@{/banhang/themmotsanphamvaosanphamyeuthich/{id}(id = ${listSanPham.idSanpham.id})}">
+										<button class="add-to-wishlist">
+											<i class="fa fa-heart-o"></i><span class="tooltipp"></span>
+										</button>
+										</a>
+									</div>
+								</div>
+								<div class="add-to-cart">
+								<a th:href="@{/banhang/themmotsanphamvaogiohang/{id}(id = ${listSanPham.idSanpham.id})}">
+									<button class="add-to-cart-btn">
+										<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
+									</button>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+						<div th:fragment='paginationbar'>
+						<div>
+							<ul class="pagination">
+								<li class="page-item" th:class="${page.firstPage}?'disabled':''"><span
+									class="page-link" th:if='${page.firstPage}'>Trang đầu</span> <a
+									class="page-link" th:if='${not page.firstPage}'
+									th:href='@{${page.url}(page=0,size=${page.size})}'>Trang đầu</a></li>
+								<li class="page-item"
+									th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasPreviousPage}'>«</span>
+									<a class="page-link" th:if='${page.hasPreviousPage}'
+									th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
+									title='Go to previous page'>«</a></li>
+								<li class="page-item" th:each='item : ${page.items}'
+									th:class="${item.current}? 'active' : ''"><span
+									class="page-link" th:if='${item.current}'
+									th:text='${item.number}'>1</span> <a class="page-link"
+									th:if='${not item.current}'
+									th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
+										th:text='${item.number}'>1</span></a></li>
+								<li class="page-item"
+									th:class="${page.hasNextPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasNextPage}'>»</span> <a
+									class="page-link" th:if='${page.hasNextPage}'
+									th:href='@{${page.url}(page=${page.number},size=${page.size})}'
+									title='Go to next page'>»</a></li>
+								<li class="page-item"
+									th:class="${page.lastPage}? 'disabled' : ''"><span
+									class="page-link" th:if='${page.lastPage}'>Trang cuối</span> <a
+									class="page-link" th:if='${not page.lastPage}'
+									th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Trang cuối
+										→</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="newsletter" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="newsletter">
+						<p>
+						<strong>LIÊN HỆ VỚI CHÚNG TÔI NHÉ</strong>
+						</p>
+						<form action="#" th:action="@{/guilienhe}" method="get">
+							<input class="input" type="email" name="email" placeholder="Email"/>
+							<input class="input" type="text" name="hoten" placeholder="Họ tên"/>
+							<input class="input" type="text" name="noidung" placeholder="Nội dung"/>
+							<br>
+							<button class="newsletter-btn" type="submit">
+								<i class="fa fa-envelope"></i> LIÊN HỆ
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="frontend/layout :: footer"> </footer>
+			<script>
+					$("input:checkbox").on('click', function() {
+						  // in the handler, 'this' refers to the box clicked on
+						  var $box = $(this);
+						  if ($box.is(":checked")) {
+						    // the name of the box is retrieved using the .attr() method
+						    // as it is assumed and expected to be immutable
+						    var group = "input:checkbox[name='" + $box.attr("name") + "']";
+						    // the checked state of the group/box on the other hand will change
+						    // and the current value is retrieved using .prop() method
+						    $(group).prop("checked", false);
+						    $box.prop("checked", true);
+						  } else {
+						    $box.prop("checked", false);
+						  }
+						});
+					</script>
+</body>
+</html>

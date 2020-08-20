@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${danhSachSanPham}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<div class="card">
+				<div class="card-block">
+					<form action="/admin/themsanpham" method="get">
+						<button class="btn btn-info float-left nBtn">Thêm mới</button>
+					</form>
+					<br>
+					<p class="text-success" th:if="${status != null}"
+						th:text="${status}"></p>
+					<form th:action="@{/admin/timKiemSanPhamTheoTen}"
+						class="form-inline ml-3 float-right" method="get">
+						<input class="form-control form-control-navbar" type="search"
+							name="search" placeholder="Tìm kiếm" aria-label="Tìm kiếm">
+						<div class="input-group-append">
+							<button class="btn btn-info float-right nBtn" type="submit">
+								<i class="fas fa-search"></i>
+							</button>
+						</div>
+					</form>
+
+					<form class="form-inline ml-3 float-right"
+						th:action="@{/admin/sanphamtheodanhmuc}" method="get">
+						<select class="form-control" name="iddanhmuc" id="iddanhmuc">
+							<option value="">Chọn danh mục...</option>
+							<option th:each="danhMuc : ${danhMuc}" th:value="${danhMuc.id}"
+								th:utext="${'Tên danh mục: '+danhMuc.ten}"></option>
+						</select>
+						<button class="btn btn-info float-left nBtn">Tìm kiếm</button>
+					</form>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>STT</th>
+								<th>Tên sản phẩm</th>
+								<th>Danh mục sản phẩm</th>
+								<th>Danh mục nhà cung cấp</th>
+								<th>Ảnh sản phẩm</th>
+								<th>Giá nhập</th>
+								<th>Giá bán</th>
+								<th>Giá khuyến mãi</th>
+								<th>Ngày tạo</th>
+								<th>Trạng thái</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="listSanPham,iterStat : ${listSanPham}">
+								<td th:text="${iterStat.index + 1 + items}"></td>
+								<td th:text="${listSanPham.idSanpham.ten}"></td>
+								<td th:text="${listSanPham.idSanpham.idDanhmuc.ten}"></td>
+								<td th:text="${listSanPham.idSanpham.idNhacungcap.ten}"></td>
+								<td><img th:src="@{${listSanPham.urlAnh}}"
+									th:width="50" th:height="50" /></td>
+								<td
+									th:text="${#numbers.formatDecimal(listSanPham.idSanpham.gianhap,3,'POINT',0,'COMMA') +' đ'}"></td>
+								<td
+									th:text="${#numbers.formatDecimal(listSanPham.idSanpham.giaban,3,'POINT',0,'COMMA') +' đ'}"></td>
+								<td th:if="${listSanPham.idSanpham.giamgia} == 0"><small
+									class="badge badge-primary">Không giảm giá</small></td>
+								<td th:if="${listSanPham.idSanpham.giamgia} != 0"
+									th:text="${#numbers.formatDecimal(listSanPham.idSanpham.giamgia,3,'POINT',0,'COMMA') +' đ'}"></td>
+								<td th:text="${listSanPham.idSanpham.ngaytao}"></td>
+								<td th:if="${listSanPham.idSanpham.status} == 1"><small
+									class="badge badge-primary"><i class="far fa-clock"></i>Hiển
+										thị</small></td>
+								<td th:if="${listSanPham.idSanpham.status} == 0"><small
+									class="badge badge-danger"><i class="far fa-clock"></i>Không
+										hiển thị</small></td>
+								<td><a class="btn btn-primary eBtn"
+									th:href="@{findonesanpham/(id=${listSanPham.idSanpham.id})}"><span
+										class="glyphicon glyphicon-pencil"></span>Chi tiết</a></td>
+								<td><a th:if="${listSanPham.idSanpham.status} == 1"
+									class="btn btn-info activateBtn"
+									th:href="@{updateNotActivateSanPham/{id}(id = ${listSanPham.idSanpham.id})}">Không
+										hiển thị</a> <a th:if="${listSanPham.idSanpham.status} == 0"
+									class="btn btn-primary activateBtn"
+									th:href="@{updateActivateSanPham/{id}(id = ${listSanPham.idSanpham.id})}">Hiển
+										thị</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:fragment='paginationbar'>
+						<div>
+							<ul class="pagination">
+								<li class="page-item" th:class="${page.firstPage}?'disabled':''"><span
+									class="page-link" th:if='${page.firstPage}'>← First</span> <a
+									class="page-link" th:if='${not page.firstPage}'
+									th:href='@{${page.url}(page=0,size=${page.size})}'>← First</a></li>
+								<li class="page-item"
+									th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasPreviousPage}'>«</span>
+									<a class="page-link" th:if='${page.hasPreviousPage}'
+									th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
+									title='Go to previous page'>«</a></li>
+								<li class="page-item" th:each='item : ${page.items}'
+									th:class="${item.current}? 'active' : ''"><span
+									class="page-link" th:if='${item.current}'
+									th:text='${item.number}'>1</span> <a class="page-link"
+									th:if='${not item.current}'
+									th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
+										th:text='${item.number}'>1</span></a></li>
+								<li class="page-item"
+									th:class="${page.hasNextPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasNextPage}'>»</span> <a
+									class="page-link" th:if='${page.hasNextPage}'
+									th:href='@{${page.url}(page=${page.number},size=${page.size})}'
+									title='Go to next page'>»</a></li>
+								<li class="page-item"
+									th:class="${page.lastPage}? 'disabled' : ''"><span
+									class="page-link" th:if='${page.lastPage}'>Last →</span> <a
+									class="page-link" th:if='${not page.lastPage}'
+									th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Last
+										→</a></li>
+							</ul>
+						</div>
+					</div>
+					<hr />
+				</div>
+			</div>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+</body>
+</html>

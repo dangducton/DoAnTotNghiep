@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title th:text="${gioHang}"></title>
+<head th:replace="frontend/layout :: head">
+</head>
+<body>
+	<header th:replace="frontend/layout :: header"> </header>
+	<!-- NAVIGATION -->
+	<nav id="navigation">
+		<div class="container">
+			<div id="responsive-nav">
+				<ul class="main-nav nav navbar-nav">
+					<li><a th:href="@{/}">Trang chủ</a></li>
+					<li><a th:href="@{/danhsachsanpham}">Danh sách sản phẩm</a></li>
+					<li><a href="/danhsachtintucfrontend">Tin tức</a></li>
+					<li><a href="/theodoicorona">Theo dõi Corona</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div id="breadcrumb" class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h3 class="breadcrumb-header">Giỏ hàng</h3>
+						<ul class="breadcrumb-tree">
+							<li><a href="#">Trang chủ</a></li>
+							<li class="active">Giỏ hàng</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="container">
+				<div class="row">
+			 <p class="text-danger" th:if="${status != null}"
+						th:text="${status}"></p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Sản phẩm</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Tổng cộng</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="listGioHang : ${listGioHang}">
+                                    <td class="shoping__cart__item">
+                                        <img th:src="${listGioHang.anh}" alt="" width="100" height="100" />
+                                        <a th:href="@{/findsanphambyid/{id}(id = ${listGioHang.idSanPham})}"><h5 th:text="${listGioHang.ten}"></h5></a>
+                                    </td>
+                                    <td class="shoping__cart__price" th:text="${#numbers.formatDecimal(listGioHang.giasanpham,3,'POINT',0,'COMMA') +' đ'}">
+                                        
+                                    </td>
+                                    <td class="shoping__cart__quantity">
+                                    <form method="POST" th:action="@{/banhang/updateSanPhamGioHang}">
+                                        <div class="quantity">
+                                            <div class="pro-qty">
+                                                <input type="number" th:value="${listGioHang.soluong}" name="soluong" min="1" max="10">
+                                                <input type="hidden" th:value="${listGioHang.id}" name="idSanPham">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="shoping__cart__total" th:text="${#numbers.formatDecimal(listGioHang.giasanpham * listGioHang.soluong,3,'POINT',0,'COMMA')+' đ'}">
+                                    </td>
+                                    <td>
+                                    <button type="submit" class="btn btn-info">
+                                        Cập nhật
+                                        </button >
+                                        </form>
+                                    </td>
+                                    <td>
+                                    <form method="POST" th:action="@{/banhang/deletegiohangbyidgiohang}">
+                                        <input type="hidden" th:value="${listGioHang.idChiTietDonHang}" name="idGioHang">
+                                         <button type="submit" class="btn btn-danger">
+                                        Xóa
+                                        </button >
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+				
+					<h3 style="float: right;">Tổng tiền:<b style="color: red;" th:text="${#numbers.formatDecimal(tongSoTien,3,'POINT',0,'COMMA') +' đ'}">VNĐ</b></h3>
+			  </div>
+			  <div style="float: right;">
+			    <a th:href="@{/banhang/thanhtoan}" class="btn btn-info"> <b>Thanh toán</b></a>
+			    <a th:href="@{/danhsachsanpham}" class="btn btn-success"> <b>Tiếp tục mua sắm</b></a>
+			  </div>
+			</div>
+		</div>
+	<div id="newsletter" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="newsletter">
+						<p>
+						<strong>LIÊN HỆ VỚI CHÚNG TÔI NHÉ</strong>
+						</p>
+						<form action="#" th:action="@{/guilienhe}" method="get">
+							<input class="input" type="email" name="email" placeholder="Email"/>
+							<input class="input" type="text" name="hoten" placeholder="Họ tên"/>
+							<input class="input" type="text" name="noidung" placeholder="Nội dung"/>
+							<br>
+							<button class="newsletter-btn" type="submit">
+								<i class="fa fa-envelope"></i> LIÊN HỆ
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="frontend/layout :: footer"> </footer>
+</body>
+</html>

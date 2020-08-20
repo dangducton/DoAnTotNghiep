@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${lienHe}"></title>
+<head th:replace="admin/layout :: head">
+<style>
+.error {
+	color: red;
+}
+</style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<br>
+			<div class="card">
+				<div class="card-block">
+					<p class="text-success" th:if="${status != null}"
+						th:text="${status}"></p>
+					<form class="form-inline ml-3 float-right">
+						<input class="form-control form-control-navbar" type="search"
+							placeholder="Tìm kiếm" aria-label="Tìm kiếm">
+						<div class="input-group-append">
+							<button class="btn btn-info float-right nBtn" type="submit">
+								<i class="fas fa-search"></i>
+							</button>
+						</div>
+					</form>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>STT</th>
+								<th>Tên danh mục</th>
+								<th>Ngày tạo</th>
+								<th>Trạng thái</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="listLienHe,iterStat : ${listLienHe}">
+								<td th:text="${iterStat.index + 1 + items}"></td>
+								<td th:text="${listLienHe.hoten}"></td>
+								<td th:text="${listLienHe.email}"></td>
+								<td th:text="${listLienHe.noidung}"></td>
+								<td th:text="${listLienHe.ngaytao}"></td>
+								<td th:if="${listLienHe.status} == 1"><small
+									class="badge badge-primary"><i class="far fa-clock"></i>Đã trả lời</small></td>
+								<td th:if="${listLienHe.status} == 0"><small
+									class="badge badge-danger"><i class="far fa-clock"></i>Chưa trả lời</small></td>
+								<td><a class="btn btn-primary eBtn"
+									th:href="@{/admin/findonelienhe/(id=${listLienHe.id})}"><span
+										class="glyphicon glyphicon-pencil"></span>Trả lời</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:fragment='paginationbar'>
+						<div>
+							<ul class="pagination">
+								<li class="page-item" th:class="${page.firstPage}?'disabled':''"><span
+									class="page-link" th:if='${page.firstPage}'>← First</span> <a
+									class="page-link" th:if='${not page.firstPage}'
+									th:href='@{${page.url}(page=0,size=${page.size})}'>← First</a></li>
+								<li class="page-item"
+									th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasPreviousPage}'>«</span>
+									<a class="page-link" th:if='${page.hasPreviousPage}'
+									th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
+									title='Go to previous page'>«</a></li>
+								<li class="page-item" th:each='item : ${page.items}'
+									th:class="${item.current}? 'active' : ''"><span
+									class="page-link" th:if='${item.current}'
+									th:text='${item.number}'>1</span> <a class="page-link"
+									th:if='${not item.current}'
+									th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
+										th:text='${item.number}'>1</span></a></li>
+								<li class="page-item"
+									th:class="${page.hasNextPage}? '' : 'disabled'"><span
+									class="page-link" th:if='${not page.hasNextPage}'>»</span> <a
+									class="page-link" th:if='${page.hasNextPage}'
+									th:href='@{${page.url}(page=${page.number},size=${page.size})}'
+									title='Go to next page'>»</a></li>
+								<li class="page-item"
+									th:class="${page.lastPage}? 'disabled' : ''"><span
+									class="page-link" th:if='${page.lastPage}'>Last →</span> <a
+									class="page-link" th:if='${not page.lastPage}'
+									th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Last
+										→</a></li>
+							</ul>
+						</div>
+					</div>
+					<hr />
+				</div>
+			</div>
+
+			<div class="myForm">
+				<form action="#" id="second_form2" method="post"
+					th:action="@{/admin/traloilienhe}">
+					<div aria-hidden="true" aria-labelledby="exampleModalLabel"
+						class="modal fade" id="exampleModal" role="dialog" tabindex="-1">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Trả lời liên hệ</h5>
+									<button aria-label="Close" class="close" data-dismiss="modal"
+										type="button">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<div class="form-group">
+										<input class="form-control" id="id" name="id" type="hidden"
+											value="" /> 
+											<label class="col-form-label"
+											for="tendanhmuc">Họ tên:</label> <input
+											class="form-control" id="hoten" name="hoten"
+											type="text" value="" />
+											 <label class="col-form-label"
+											for="tendanhmuc">Email:</label> <input
+											class="form-control" id="email" name="email"
+											type="text" value="" />
+											 <label class="col-form-label"
+											for="tendanhmuc">Nội dung liên hệ:</label> <input
+											class="form-control" id="noidung" name="noidung"
+											type="text" value="" />
+											 <label class="col-form-label"
+											for="tendanhmuc">Nội dung trả lời:</label> <textarea
+											class="form-control" id="noidungtraloi" name="noidungtraloi"
+											 ></textarea>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-secondary" data-dismiss="modal"
+										type="button">Đóng</button>
+									<input class="btn btn-primary" type="submit" value="Liên hệ" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div aria-hidden="true" aria-labelledby="myModalLabel"
+				class="modal fade" id="myModal" role="dialog" tabindex="-1">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="myModalLabel">Update Record</h5>
+							<button aria-label="Close" class="close" data-dismiss="modal"
+								type="button">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p class="alert alert-danger">Bạn có muốn update record này
+								không?</p>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-secondary" data-dismiss="modal"
+								type="button">Close</button>
+							<a class="btn btn-secondary" href="" id="updateRef">Sửa</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+
+	<script src="../static/quantri/js/lienhe.js"
+		th:src="@{/quantri/js/lienhe.js}" type="text/javascript"></script>
+</body>
+</html>

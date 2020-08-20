@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${phongBan}"></title>
+<head th:replace="admin/layout :: head">
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+	<div class="wrapper">
+		<nav th:replace="admin/layout :: header"></nav>
+		<aside th:replace="admin/layout :: menu"></aside>
+		<div class="content-wrapper">
+			<form id="second_form" th:action="@{/taothongketheosanpham}"
+				method="get" enctype="multipart/form-data">
+				<h3 class="modal-title">Tạo thống kê theo sản phẩm</h3>
+		
+				<div class="form-row">
+				<div class="form-group col-md-4">
+						<label for="ngaysinh">Ngày:</label> <select
+							class="form-control" id="thang" th:name="thang">
+							<option value="">Ngày:</option>
+							<option th:each="ngay : ${ngay}" th:value="${ngay}"
+								th:utext="${'Ngày '+ ngay"></option>
+						</select>
+					</div>
+			
+				<div class="form-group col-md-4">
+						<label for="ngaysinh">Tháng:</label> <select
+							class="form-control" id="thang" th:name="thang">
+							<option value="">Tháng</option>
+							<option th:each="thang : ${thang}" th:value="${thang}"
+								th:utext="${'Tháng '+ thang}"></option>
+						</select>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="ngaysinh">Năm:</label> <select
+							class="form-control" id="nam" th:name="nam">
+							<option value="">Năm </option>
+							<option th:each="nam : ${nam}" th:value="${nam}"
+								th:utext="${'Năm '+ nam}"></option>
+						</select>
+					</div>
+				</div>
+				
+				<button type="submit" class="btn btn-primary">Tạo báo cáo</button>
+			</form>
+			<script>
+  $('#second_form').validate({
+	  rules: {
+		  phucap: {
+		      required: true
+		},
+		nam: {
+		      required: true
+		},
+		thang: {
+		      required: true
+		},
+		noidung: {
+		      required: true
+		},
+		hodem: {
+		      required: true
+		},
+		ten: {
+		      required: true
+	    },
+	    diachihientai: {
+		      required: true
+	    },
+	    diachithuongchu: {
+		      required: true
+	    },
+	    noisinh: {
+		      required: true
+	    },
+		quoctich: {
+		      required: true
+	    },
+	    ngaysinh: {
+		      required: true
+	    },
+	    chungminhnhandan: {
+		      required: true
+	    },
+	    noicap: {
+		      required: true
+	    },
+	    email: {
+		      required: true
+	    },
+	    chucvu: {
+		      required: true
+	    },
+	    phongban: {
+		      required: true
+	    },
+	    chuyennganh: {
+		      required: true
+	    },
+	    tinhtranghonnhan: {
+		      required: true
+	    },
+	    tongiao: {
+		      required: true
+	    },
+	    dantoc: {
+		      required: true
+	    },
+	    trinhdohocvan: {
+		      required: true
+	    }
+	  },
+	  messages: {
+		  phucap: {
+		      required: 'Yêu cầu chọn hình thức phụ cấp'
+		},
+		  nam: {
+		      required: 'Yêu cầu chọn năm'
+		},
+		thang: {
+		      required: 'Yêu cầu chọn tháng'
+		},
+		noidung: {
+		      required: 'Yêu cầu nhập nội dung'
+		},
+			hodem: {
+			      required: 'Yêu cầu nhập đầy đủ họ đệm'
+			},
+			ten: {
+			      required: 'Yêu cầu nhập tên'
+		    },
+		    diachihientai: {
+			      required: 'Yêu cầu nhập địa chỉ hiện tại'
+		    },
+		    diachithuongchu: {
+			      required: 'Yêu cầu nhập địa chỉ thường chú'
+		    },
+		    noisinh: {
+			      required: 'Yêu cầu nhập nơi sinh'
+		    },
+			quoctich: {
+			      required: 'Yêu cầu nhập quốc tịch'
+		    },
+		    ngaysinh: {
+			      required: 'Yêu cầu nhập ngày sinh'
+		    },
+		    chungminhnhandan: {
+			      required: 'Yêu cầu nhập số chứng minh nhân dân'
+		    },
+		    noicap: {
+			      required: 'Yêu cầu nhập nơi cấp'
+		    },
+		    email: {
+			      required: 'Yêu cầu nhập Email'
+		    },
+		    chucvu: {
+			      required: 'Yêu cầu chọn chức vụ'
+		    },
+		    phongban: {
+			      required: 'Yêu cầu chọn phòng ban'
+		    },
+		    chuyennganh: {
+			      required: 'Yêu cầu chọn chuyên ngành'
+		    },
+		    tinhtranghonnhan: {
+			      required: 'Yêu cầu chọn tình trạng hôn nhân'
+		    },
+		    tongiao: {
+			      required: 'Yêu cầu chọn tôn giáo'
+		    },
+		    dantoc: {
+			      required: 'Yêu cầu chọn dân tộc'
+		    },
+		    trinhdohocvan: {
+			      required: 'Yêu cầu chọn trình độ học vấn'
+		    }
+	  },
+	  submitHandler: function(form) {
+	    form.submit();
+	  }
+	});
+</script>
+			<script>
+var canvas = document.createElement("canvas");
+var ctx = canvas.getContext("2d");
+var imageData;
+document.getElementById('myFile').onchange = function (evt) {
+    var tgt = evt.target || window.event.srcElement,
+        files = tgt.files;
+
+    // FileReader support
+    if (FileReader && files && files.length) {
+        var fr = new FileReader();
+        fr.onload = () => showImage(fr);
+        fr.readAsDataURL(files[0]);
+    }
+}
+
+function showImage(fileReader) {
+    var img = document.getElementById("myImage");
+    img.onload = () => getImageData(img);
+    img.src = fileReader.result;
+}
+
+function getImageData(img) {
+    ctx.drawImage(img, 0, 0);
+    imageData = ctx.getImageData(0, 0, img.width, img.height).data;
+    console.log("image data:", imageData);
+}
+</script>
+		</div>
+		<footer th:replace="admin/layout :: footer"></footer>
+		<aside class="control-sidebar control-sidebar-dark"></aside>
+	</div>
+</body>
+</html>
